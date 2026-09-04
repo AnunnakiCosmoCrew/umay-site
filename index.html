@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Umay — Türkçe-öncelikli yapay zeka çağrı asistanı</title>
+<meta name="description" content="Umay, işletmenize özel kurulan, müşterilerinizle doğal Türkçe konuşan, randevu alan ve gerektiğinde çalışanınıza devreden yapay zeka asistanıdır.">
+<meta property="og:title" content="Umay — Türkçe-öncelikli yapay zeka çağrı asistanı">
+<meta property="og:description" content="Umay, işletmenize özel kurulan, müşterilerinizle doğal Türkçe konuşan, randevu alan ve gerektiğinde çalışanınıza devreden yapay zeka asistanıdır.">
+<meta property="og:url" content="https://umayconnect.org/">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="tr_TR">
+<meta name="twitter:card" content="summary">
+<link rel="alternate" hreflang="tr" href="https://umayconnect.org/">
+<link rel="alternate" hreflang="en" href="https://umayconnect.org/en/">
+<link rel="alternate" hreflang="x-default" href="https://umayconnect.org/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="umay.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='14' fill='%23B4532A'/><path d='M8 19c3-6 6-8 8-8s5 2 8 8c-3-2-5-3-8-3s-5 1-8 3z' fill='%23FAF6EF'/></svg>">
+</head>
+<body>
+
+<header class="wrap">
+  <nav class="nav">
+    <a class="brand" href="#">
+      <svg width="30" height="30" viewBox="0 0 32 32" aria-hidden="true">
+        <circle cx="16" cy="16" r="15" fill="#B4532A"/>
+        <path d="M8 19c3-6 6-8 8-8s5 2 8 8c-3-2-5-3-8-3s-5 1-8 3z" fill="#FAF6EF"/>
+      </svg>
+      <span class="brand-name">umay</span>
+    </a>
+    <div class="nav-links">
+      <a class="nav-plain" href="#nasil">Nasıl çalışır</a>
+      <a class="nav-plain" href="#ozellikler">Özellikler</a>
+      <a class="nav-plain" href="#hakkimizda">Hakkımızda</a>
+      <a class="nav-lang" href="en/" lang="en" hreflang="en" title="English">EN</a>
+      <a class="btn btn-primary" href="demo.html">Canlı demo</a>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <section class="hero wrap">
+    <div class="hero-copy">
+      <span class="eyebrow">Türkçe-öncelikli, programlanabilir yapay zeka çağrı asistanı</span>
+      <h1>Sizi arayan herkes, en iyi elemanınıza denk gelmiş gibi hissetsin.</h1>
+      <p class="lead">
+        Umay, işletmenize özel kurulan bir yapay zeka asistanıdır: müşterinizle doğal bir
+        Türkçeyle konuşur, sorularını yalnızca sizin işletme bilgilerinizden yanıtlar ve
+        işlemleri konuşma sırasında gerçekleştirir — randevu oluşturur, kayıt açar, sipariş
+        sorgular; sistemlerinize bağlantılar kurulumda tanımlanır. İşletmenizin iş kurallarına
+        göre çalışır; gerektiğinde görüşmeyi çalışanınıza devreder.
+      </p>
+      <div class="hero-ctas">
+        <a class="btn btn-primary btn-lg" href="demo.html">🎙 Canlı demoyu deneyin</a>
+        <a class="btn btn-ghost btn-lg" href="#nasil">Nasıl çalışır?</a>
+      </div>
+      <p class="hero-note">Bugün web ve masaüstünde; telefon kanalı yol haritamızda.
+        İşletmeniz için <a class="trial-link" href="mailto:contact@umayconnect.org?subject=Umay%20canl%C4%B1%20demo%20talebi&body=Merhaba%2C%0A%0ACanl%C4%B1%20demoyu%20denemek%20istiyorum.%20Uygun%20oldu%C4%9Funuzda%20a%C3%A7ar%20m%C4%B1s%C4%B1n%C4%B1z%3F%0A%0A%C4%B0%C5%9Fletme%20%2F%20sekt%C3%B6r%3A%20%0AAd%3A%20%0A">size özel deneme bağlantısı isteyin&nbsp;→</a></p>
+    </div>
+
+    <!-- Örnek görüşme: kurgusal kimlik demo.html ile aynı (Ayşe Demir); yalnızca demoda
+         gösterilen yetenekler (uygunluk sorgusu, randevu, geri okuma, onay). -->
+    <div class="call-card" id="callCard" aria-label="Örnek görüşme dökümü">
+      <div class="call-card-bar">
+        <span class="call-dot" aria-hidden="true"></span>
+        <span>Gelen çağrı · Umay Demo Oto Servis</span>
+        <span class="call-chip">kurgusal veri</span>
+      </div>
+      <div class="call-body">
+        <div class="cb bot"><span class="who">Umay</span><span class="txt">İyi günler, Umay Demo Oto Servis. Ben Umay, yapay zeka asistanıyım. Size nasıl yardımcı olabilirim?</span></div>
+        <div class="cb user"><span class="who">Arayan</span><span class="txt">Merhaba, aracıma periyodik bakım için randevu almak istiyordum.</span></div>
+        <div class="cb bot"><span class="who">Umay</span><span class="txt">Elbette. Hangi gün ve saat sizin için uygun olur?</span></div>
+        <div class="cb user"><span class="who">Arayan</span><span class="txt">Perşembe öğleden sonra olabilir mi?</span></div>
+        <div class="cb bot"><span class="who">Umay</span><span class="txt">Takvime bakıyorum… Perşembe 14.00 uygun görünüyor. Adınızı, telefonunuzu ve plakanızı alabilir miyim?</span></div>
+        <div class="cb user"><span class="who">Arayan</span><span class="txt">Ayşe Demir. Telefonum 0 555 246 80 13, plakam 00 ABC 123.</span></div>
+        <div class="cb bot"><span class="who">Umay</span><span class="txt">Teyit ediyorum: Ayşe Demir. Telefon: sıfır, beş beş beş, iki dört altı, sekiz sıfır, on üç. Plaka: sıfır sıfır, A B C, yüz yirmi üç. Perşembe saat 14.00, periyodik bakım. Onaylıyor musunuz?</span></div>
+        <div class="cb user"><span class="who">Arayan</span><span class="txt">Evet, doğru.</span></div>
+        <div class="cb bot"><span class="who">Umay</span><span class="txt">Randevunuz oluşturuldu. Perşembe 14.00'te bekliyoruz, iyi günler dilerim.</span></div>
+        <div class="call-result">✓ Randevu oluşturuldu — geri okumayla teyitli</div>
+      </div>
+      <a class="call-card-cta" href="demo.html">Bunu canlı deneyin →</a>
+    </div>
+  </section>
+
+  <section class="section-alt" id="nasil">
+    <div class="wrap">
+      <h2>Nasıl çalışır</h2>
+      <p class="section-sub">Umay bir seslendirme aracı değil, uçtan uca bir görüşme asistanıdır: dinler, anlar, işi yapar.</p>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <h3>Dinler ve anlar</h3>
+          <ul>
+            <li>Akıcı Türkçe konuşma tanıma</li>
+            <li>Araya girdiğinizde susar, sizi dinler</li>
+            <li>İlk cümlesinde yapay zeka olduğunu açıkça söyler</li>
+          </ul>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <h3>İşi yapar</h3>
+          <ul>
+            <li>Sistemlerinize API üzerinden bağlanır — bağlantılar kurulumda tanımlanır</li>
+            <li>İş mantığınızı konuşma sırasında yürütür: uygunluk sorgular, randevu oluşturur, kayıt açar</li>
+            <li>Onaydan önce adı, telefonu rakam rakam, plakayı harf harf geri okur</li>
+          </ul>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <h3>Gerektiğinde insana devreder</h3>
+          <ul>
+            <li>Bilgi tabanında olmayan soruda uydurmaz</li>
+            <li>Sinirli müşteri ya da hassas konuda görüşmeyi çalışanınıza aktarır</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="ozellikler">
+    <div class="wrap">
+      <h2>Neden Umay?</h2>
+      <p class="section-sub">Genel çok-dilli botların aksine, Umay'ın her katmanı Türkçe iş görüşmeleri için ayarlanır ve ölçülür.</p>
+      <div class="features">
+        <div class="feature">
+          <span class="icon">🗣️</span>
+          <h3>Doğal Türkçe konuşma</h3>
+          <ul>
+            <li>Türkçe'ye özel normalizasyon katmanı</li>
+            <li>Telefon, tarih, saat, plaka ve tutarlar doğru okunur</li>
+            <li>Modele değil, teste dayanır</li>
+          </ul>
+        </div>
+        <div class="feature">
+          <span class="icon">📚</span>
+          <h3>Sizin bilginizle konuşur</h3>
+          <ul>
+            <li>Yanıtlar yalnızca işletmenizin belgelerinden</li>
+            <li>Belgede olmayan soruda tahmin etmez; insana devreder</li>
+          </ul>
+        </div>
+        <div class="feature">
+          <span class="icon">🔌</span>
+          <h3>Sistemlerinizle entegre</h3>
+          <ul>
+            <li>Randevu yalnızca bir örnek</li>
+            <li>İş mantığınız API çağrılarıyla yürütülür; bağlantılar kurulumda tanımlanır</li>
+            <li>CRM kaydı, sipariş sorgusu: tanımladığınız her işlem</li>
+          </ul>
+        </div>
+        <div class="feature">
+          <span class="icon">🔁</span>
+          <h3>Geri okuma güvencesi</h3>
+          <ul>
+            <li>Ad, telefon, plaka, gün ve saat</li>
+            <li>Kayıttan önce geri okunur, onayınız alınır</li>
+          </ul>
+        </div>
+        <div class="feature">
+          <span class="icon">🤝</span>
+          <h3>Güvenilir insan devri</h3>
+          <ul>
+            <li>Asistan ne zaman duracağını bilir</li>
+            <li>Tanımlı güvenlik tetikleyicilerinde görüşme çalışanınıza aktarılır</li>
+          </ul>
+        </div>
+        <div class="feature">
+          <span class="icon">📊</span>
+          <h3>Ölçülen kalite ve maliyet</h3>
+          <ul>
+            <li>Her görüşmenin gecikme ve maliyet kaydı</li>
+            <li>Rapor karakter sayısıyla değil, alınan randevuyla</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-alt" id="hakkimizda">
+    <div class="wrap">
+      <h2>Hakkımızda</h2>
+      <p class="section-sub">Umay, <b>Luvita Teknoloji Enerji Yazılım Sanayi ve Ticaret
+      Limited Şirketi</b>&rsquo;nin (<a class="inline-link" href="https://luvita.tr">luvita.tr</a>) geliştirdiği
+      Türkçe-öncelikli yapay zeka çağrı asistanıdır.</p>
+      <p class="about-text">Luvita'nın kurucusu Mert Ertuğrul, bankacılık ve finans sektöründe on dört
+      yıla yakın deneyime sahip bir yazılım mühendisidir. Türk Eximbank'ta yedi yıl boyunca
+      önce Banka Analizi biriminde finansal analist olarak çalışmış, ardından Finansal
+      Kuruluşlar biriminde bankacılık yazılım projelerini ürün yöneticisi olarak yönetmiş ve
+      bu projelerde bizzat yazılım geliştirmiştir. Londra merkezli ticaret finansmanı
+      kuruluşu Channel Capital Advisors'ta beş yıl kurumsal sistemlerin mikroservis
+      mimarisine dönüşümünü yürütmüş; son olarak ING'nin küresel teknoloji merkezi
+      ING Hubs Türkiye'de, ING İtalya için bankacılık çözümleri geliştiren ekipte kıdemli
+      yazılım geliştirici olarak görev almış ve Luvita'yı kurmak için ayrılmıştır. Sabancı
+      Üniversitesi Bilişim Teknolojileri yüksek lisans mezunu ve Oracle sertifikalı Java
+      uzmanıdır.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="demo-card">
+        <div>
+          <h2>Kendi kulaklarınızla deneyin</h2>
+          <p>Demoda Umay, kurgusal bir bankanın müşteri hattı olarak sizi karşılar: kayıp
+          kart bildirin, şube randevusu isteyin, faiz sorun, araya girin — nasıl yanıt
+          verdiğini canlı görün. Bankacılık tek bir örnek; aynı altyapı sizin iş
+          akışlarınıza programlanır.</p>
+        </div>
+        <a class="btn btn-primary btn-lg" href="demo.html">Demoyu başlat →</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <span>© 2026 Umay — bir Luvita ürünü. Erken erişim; demo ortamı kurgusal işletme
+    verisiyle çalışır.</span>
+    <span><a href="https://luvita.tr">luvita.tr</a>
+    &nbsp;·&nbsp; <a href="mailto:contact@umayconnect.org">İletişim</a></span>
+  </div>
+</footer>
+
+<script>
+// Hero call-card replay: progressive enhancement over the static transcript.
+// No JS or prefers-reduced-motion => the full transcript stays visible as-is.
+(function () {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var card = document.getElementById('callCard');
+  if (!card) return;
+  var body = card.querySelector('.call-body');
+  var items = Array.prototype.slice.call(card.querySelectorAll('.cb, .call-result'));
+  items.forEach(function (el) { el.classList.add('pending'); });
+
+  function scrollBottom() { body.scrollTop = body.scrollHeight; }
+
+  function typeBot(el, done) {
+    var txt = el.querySelector('.txt');
+    var full = txt.textContent;
+    txt.textContent = '';
+    el.classList.remove('pending');
+    el.classList.add('typing');
+    // Time-based, not tick-based: browsers throttle timers in background tabs,
+    // and elapsed-time progress lets the transcript catch up instead of crawling.
+    var start = performance.now();
+    var t = setInterval(function () {
+      var n = Math.min(full.length, Math.floor((performance.now() - start) / 28));
+      txt.textContent = full.slice(0, n);
+      scrollBottom();
+      if (n >= full.length) {
+        clearInterval(t);
+        el.classList.remove('typing');
+        done();
+      }
+    }, 28);
+  }
+
+  function showUser(el, done) {
+    el.classList.remove('pending');
+    el.classList.add('dots');
+    scrollBottom();
+    setTimeout(function () {
+      el.classList.remove('dots');
+      scrollBottom();
+      done();
+    }, 500);
+  }
+
+  function step(idx) {
+    if (idx >= items.length) return; // plays once; no timers left running
+    var el = items[idx];
+    var next = function () { setTimeout(function () { step(idx + 1); }, 800); };
+    if (el.classList.contains('call-result')) {
+      el.classList.remove('pending');
+      scrollBottom();
+      step(idx + 1);
+    } else if (el.classList.contains('bot')) {
+      typeBot(el, next);
+    } else {
+      showUser(el, next);
+    }
+  }
+
+  var started = false;
+  var io = new IntersectionObserver(function (entries) {
+    if (started) return;
+    if (entries.some(function (e) { return e.isIntersecting; })) {
+      started = true;
+      io.disconnect();
+      setTimeout(function () { step(0); }, 400);
+    }
+  }, { threshold: 0.35 });
+  io.observe(card);
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Umay — Turkish-first programmable AI call assistant</title>
+<meta name="description" content="Umay is a programmable AI call assistant built Turkish-first: it answers a business's calls in natural Turkish, completes real work in the business's systems during the conversation, and hands over to a human when it should.">
+<meta property="og:title" content="Umay — Turkish-first programmable AI call assistant">
+<meta property="og:description" content="Umay is a programmable AI call assistant built Turkish-first: it answers a business's calls in natural Turkish, completes real work in the business's systems during the conversation, and hands over to a human when it should.">
+<meta property="og:url" content="https://umayconnect.org/en/">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="en_US">
+<meta property="og:locale:alternate" content="tr_TR">
+<meta name="twitter:card" content="summary">
+<link rel="alternate" hreflang="en" href="https://umayconnect.org/en/">
+<link rel="alternate" hreflang="tr" href="https://umayconnect.org/">
+<link rel="alternate" hreflang="x-default" href="https://umayconnect.org/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../umay.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='14' fill='%23B4532A'/><path d='M8 19c3-6 6-8 8-8s5 2 8 8c-3-2-5-3-8-3s-5 1-8 3z' fill='%23FAF6EF'/></svg>">
+<style>
+/* English-page-only additions: the call card keeps its authentic Turkish
+   transcript and carries an English gloss under each line. */
+.cb .gloss {
+  display: block;
+  margin-top: 4px;
+  font-size: 12px;
+  font-style: italic;
+  line-height: 1.45;
+  opacity: .62;
+}
+/* While the JS replay runs, each gloss appears only once its line has finished.
+   No JS / reduced motion => the card stays fully static, glosses included. */
+.call-card.replay .cb .gloss { display: none; }
+.call-card.replay .cb.glossed .gloss { display: block; }
+</style>
+</head>
+<body>
+
+<header class="wrap">
+  <nav class="nav">
+    <a class="brand" href="#">
+      <svg width="30" height="30" viewBox="0 0 32 32" aria-hidden="true">
+        <circle cx="16" cy="16" r="15" fill="#B4532A"/>
+        <path d="M8 19c3-6 6-8 8-8s5 2 8 8c-3-2-5-3-8-3s-5 1-8 3z" fill="#FAF6EF"/>
+      </svg>
+      <span class="brand-name">umay</span>
+    </a>
+    <div class="nav-links">
+      <a class="nav-plain" href="#how">How it works</a>
+      <a class="nav-plain" href="#why">Why Turkish-first</a>
+      <a class="nav-plain" href="#about">About</a>
+      <a class="nav-lang" href="../" lang="tr" hreflang="tr" title="Türkçe">TR</a>
+      <a class="btn btn-primary" href="../demo.html">Live demo</a>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <section class="hero wrap">
+    <div class="hero-copy">
+      <span class="eyebrow">Turkish-first, programmable AI call assistant</span>
+      <h1>Every caller, answered like they reached the business's best employee.</h1>
+      <p class="lead">
+        Umay is an AI assistant set up per business: it speaks natural Turkish with
+        callers, answers only from that business's own knowledge, and completes the work
+        during the conversation — booking appointments, opening records, checking orders
+        through APIs into the business's systems, defined at setup. It follows the
+        business's rules, and hands the call to a human when it should.
+      </p>
+      <div class="hero-ctas">
+        <a class="btn btn-primary btn-lg" href="../demo.html">🎙 Try the live demo</a>
+        <a class="btn btn-ghost btn-lg" href="#how">How it works</a>
+      </div>
+      <p class="hero-note">On web and desktop today; the phone channel is on the roadmap.
+        The demo speaks Turkish — that <em>is</em> the product. Questions in English?
+        <a class="trial-link" href="mailto:contact@umayconnect.org?subject=Umay%20inquiry&body=Hello%2C%0A%0AI%27d%20like%20to%20learn%20more%20about%20Umay.%0A%0AName%3A%20%0ACompany%20%2F%20context%3A%20%0A">Get in touch&nbsp;→</a></p>
+    </div>
+
+    <!-- Sample call: same fictional identity as demo.html (Ayşe Demir); only capabilities
+         actually shown in the demo (availability check, booking, read-back, confirmation).
+         Transcript stays in Turkish — it's the product — with an English gloss per line. -->
+    <div class="call-card" id="callCard" aria-label="Sample call transcript (Turkish, with English translations)">
+      <div class="call-card-bar">
+        <span class="call-dot" aria-hidden="true"></span>
+        <span>Incoming call · Umay Demo Auto Service</span>
+        <span class="call-chip">fictional data</span>
+      </div>
+      <div class="call-body">
+        <div class="cb bot"><span class="who">Umay</span><span class="txt">İyi günler, Umay Demo Oto Servis. Ben Umay, yapay zeka asistanıyım. Size nasıl yardımcı olabilirim?</span><span class="gloss">Good afternoon, Umay Demo Auto Service. I'm Umay, an AI assistant. How can I help you?</span></div>
+        <div class="cb user"><span class="who">Caller</span><span class="txt">Merhaba, aracıma periyodik bakım için randevu almak istiyordum.</span><span class="gloss">Hi — I'd like to book my car in for scheduled maintenance.</span></div>
+        <div class="cb bot"><span class="who">Umay</span><span class="txt">Elbette. Hangi gün ve saat sizin için uygun olur?</span><span class="gloss">Of course. What day and time would suit you?</span></div>
+        <div class="cb user"><span class="who">Caller</span><span class="txt">Perşembe öğleden sonra olabilir mi?</span><span class="gloss">Could it be Thursday afternoon?</span></div>
+        <div class="cb bot"><span class="who">Umay</span><span class="txt">Takvime bakıyorum… Perşembe 14.00 uygun görünüyor. Adınızı, telefonunuzu ve plakanızı alabilir miyim?</span><span class="gloss">Checking the calendar… Thursday 2:00 pm looks free. May I take your name, phone number and licence plate?</span></div>
+        <div class="cb user"><span class="who">Caller</span><span class="txt">Ayşe Demir. Telefonum 0 555 246 80 13, plakam 00 ABC 123.</span><span class="gloss">Ayşe Demir. My phone is 0 555 246 80 13, my plate is 00 ABC 123.</span></div>
+        <div class="cb bot"><span class="who">Umay</span><span class="txt">Teyit ediyorum: Ayşe Demir. Telefon: sıfır, beş beş beş, iki dört altı, sekiz sıfır, on üç. Plaka: sıfır sıfır, A B C, yüz yirmi üç. Perşembe saat 14.00, periyodik bakım. Onaylıyor musunuz?</span><span class="gloss">Confirming: Ayşe Demir. Phone: zero, five five five, two four six, eight zero, thirteen. Plate: zero zero, A B C, one twenty-three. Thursday at 2:00 pm, scheduled maintenance. Do you confirm?</span></div>
+        <div class="cb user"><span class="who">Caller</span><span class="txt">Evet, doğru.</span><span class="gloss">Yes, that's right.</span></div>
+        <div class="cb bot"><span class="who">Umay</span><span class="txt">Randevunuz oluşturuldu. Perşembe 14.00'te bekliyoruz, iyi günler dilerim.</span><span class="gloss">Your appointment is booked. See you Thursday at 2:00 pm — have a good day.</span></div>
+        <div class="call-result">✓ Appointment booked — confirmed with a read-back</div>
+      </div>
+      <a class="call-card-cta" href="../demo.html">Try this live (in Turkish) →</a>
+    </div>
+  </section>
+
+  <section class="section-alt" id="how">
+    <div class="wrap">
+      <h2>How it works</h2>
+      <p class="section-sub">Umay is not a voice skin over a chatbot — it is an end-to-end conversation assistant: it listens, understands, and does the work.</p>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <h3>Listens and understands</h3>
+          <ul>
+            <li>Fluent Turkish speech recognition</li>
+            <li>Stops and listens when the caller interrupts</li>
+            <li>Discloses that it is an AI in its very first sentence</li>
+          </ul>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <h3>Does the work</h3>
+          <ul>
+            <li>Connects to the business's systems over APIs — integrations defined at setup</li>
+            <li>Runs the business's logic mid-conversation: checks availability, books appointments, opens records</li>
+            <li>Before confirming, reads names back, phone numbers digit by digit, plates letter by letter</li>
+          </ul>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <h3>Hands over to a human when it should</h3>
+          <ul>
+            <li>Never invents an answer outside the knowledge base</li>
+            <li>Transfers angry callers and sensitive topics to the business's staff</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="why">
+    <div class="wrap">
+      <h2>Why Turkish-first</h2>
+      <p class="section-sub">Generic multilingual bots are measurably weaker in Turkish — an agglutinative language where phone numbers, dates, plates and amounts must be spoken the Turkish way. Every layer of Umay is tuned for Turkish business conversations and validated by measurement, not by the model's own claims.</p>
+      <div class="features">
+        <div class="feature">
+          <span class="icon">🗣️</span>
+          <h3>Natural Turkish speech</h3>
+          <ul>
+            <li>A normalisation layer built specifically for Turkish</li>
+            <li>Phone numbers, dates, times, plates and amounts read out correctly</li>
+            <li>Backed by tests, not by the model</li>
+          </ul>
+        </div>
+        <div class="feature">
+          <span class="icon">📚</span>
+          <h3>Speaks from the business's knowledge</h3>
+          <ul>
+            <li>Answers come only from the business's own documents</li>
+            <li>Outside them it doesn't guess — it hands over to a human</li>
+          </ul>
+        </div>
+        <div class="feature">
+          <span class="icon">🔌</span>
+          <h3>Integrated with business systems</h3>
+          <ul>
+            <li>Appointments are just one example</li>
+            <li>Business logic runs through API calls defined at setup</li>
+            <li>CRM records, order lookups: any action the business defines</li>
+          </ul>
+        </div>
+        <div class="feature">
+          <span class="icon">🔁</span>
+          <h3>Read-back assurance</h3>
+          <ul>
+            <li>Names, phone numbers, plates, days and times</li>
+            <li>Read back and confirmed before anything is saved</li>
+          </ul>
+        </div>
+        <div class="feature">
+          <span class="icon">🤝</span>
+          <h3>Reliable human handover</h3>
+          <ul>
+            <li>The assistant knows when to stop</li>
+            <li>Defined safety triggers transfer the call to staff</li>
+          </ul>
+        </div>
+        <div class="feature">
+          <span class="icon">📊</span>
+          <h3>Measured quality and cost</h3>
+          <ul>
+            <li>Latency and cost logged for every conversation</li>
+            <li>Reported in appointments booked, not characters generated</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-alt" id="about">
+    <div class="wrap">
+      <h2>About</h2>
+      <p class="section-sub">Umay is a Turkish-first AI call assistant developed by <b>Luvita
+      Teknoloji Enerji Yazılım Sanayi ve Ticaret Limited Şirketi</b>
+      (<a class="inline-link" href="https://luvita.tr">luvita.tr</a>).</p>
+      <p class="about-text">Luvita's founder, Mert Ertuğrul, is a software engineer with close to
+      fourteen years of experience in banking and finance. He spent seven years at Türk
+      Eximbank — first as a financial analyst in the Bank Analysis unit, then in the
+      Financial Institutions unit managing banking software projects as a product manager
+      and developing software on those projects himself. He then spent five years at
+      Channel Capital Advisors, a London-based trade-finance firm, leading the
+      transformation of its enterprise systems to a microservice architecture; most
+      recently he was a senior software engineer at ING Hubs Türkiye — ING's global
+      technology centre — on the team building banking solutions for ING Italy, and left
+      to found Luvita. He holds an MSc in Information Technologies from Sabancı University
+      and is an Oracle-certified Java expert.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="demo-card">
+        <div>
+          <h2>Hear it for yourself</h2>
+          <p>In the demo, Umay answers as the customer line of a fictional bank: report a
+          lost card, ask for a branch appointment, ask about rates, interrupt it
+          mid-sentence — and watch how it responds, live. The conversation is in Turkish;
+          that's the product. Banking is just one example — the same platform is
+          programmed to a business's own workflows.</p>
+        </div>
+        <a class="btn btn-primary btn-lg" href="../demo.html">Start the demo →</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <span>© 2026 Umay — a Luvita product. Early access; the demo environment runs on
+    fictional business data.</span>
+    <span><a href="https://luvita.tr">luvita.tr</a>
+    &nbsp;·&nbsp; <a href="mailto:contact@umayconnect.org">Contact</a></span>
+  </div>
+</footer>
+
+<script>
+// Hero call-card replay: progressive enhancement over the static transcript.
+// No JS or prefers-reduced-motion => the full transcript (with glosses) stays as-is.
+// Same as the Turkish page's script, plus: glosses hide while replaying and each
+// line's gloss is revealed ("glossed") once that line finishes.
+(function () {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var card = document.getElementById('callCard');
+  if (!card) return;
+  card.classList.add('replay');
+  var body = card.querySelector('.call-body');
+  var items = Array.prototype.slice.call(card.querySelectorAll('.cb, .call-result'));
+  items.forEach(function (el) { el.classList.add('pending'); });
+
+  function scrollBottom() { body.scrollTop = body.scrollHeight; }
+
+  function typeBot(el, done) {
+    var txt = el.querySelector('.txt');
+    var full = txt.textContent;
+    txt.textContent = '';
+    el.classList.remove('pending');
+    el.classList.add('typing');
+    // Time-based, not tick-based: browsers throttle timers in background tabs,
+    // and elapsed-time progress lets the transcript catch up instead of crawling.
+    var start = performance.now();
+    var t = setInterval(function () {
+      var n = Math.min(full.length, Math.floor((performance.now() - start) / 28));
+      txt.textContent = full.slice(0, n);
+      scrollBottom();
+      if (n >= full.length) {
+        clearInterval(t);
+        el.classList.remove('typing');
+        el.classList.add('glossed');
+        scrollBottom();
+        done();
+      }
+    }, 28);
+  }
+
+  function showUser(el, done) {
+    el.classList.remove('pending');
+    el.classList.add('dots');
+    scrollBottom();
+    setTimeout(function () {
+      el.classList.remove('dots');
+      el.classList.add('glossed');
+      scrollBottom();
+      done();
+    }, 500);
+  }
+
+  function step(idx) {
+    if (idx >= items.length) return; // plays once; no timers left running
+    var el = items[idx];
+    var next = function () { setTimeout(function () { step(idx + 1); }, 800); };
+    if (el.classList.contains('call-result')) {
+      el.classList.remove('pending');
+      scrollBottom();
+      step(idx + 1);
+    } else if (el.classList.contains('bot')) {
+      typeBot(el, next);
+    } else {
+      showUser(el, next);
+    }
+  }
+
+  var started = false;
+  var io = new IntersectionObserver(function (entries) {
+    if (started) return;
+    if (entries.some(function (e) { return e.isIntersecting; })) {
+      started = true;
+      io.disconnect();
+      setTimeout(function () { step(0); }, 400);
+    }
+  }, { threshold: 0.35 });
+  io.observe(card);
+})();
+</script>
+
+</body>
+</html>

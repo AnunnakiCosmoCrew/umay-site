@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Umay — Canlı Demo</title>
+<meta name="description" content="Umay yapay zeka asistanıyla canlı Türkçe sesli görüşme demosu.">
+<meta property="og:title" content="Umay — Canlı Demo">
+<meta property="og:description" content="Umay yapay zeka asistanıyla canlı Türkçe sesli görüşme demosu.">
+<meta property="og:url" content="https://umayconnect.org/demo.html">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="tr_TR">
+<meta name="twitter:card" content="summary">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='14' fill='%23B4532A'/><path d='M8 19c3-6 6-8 8-8s5 2 8 8c-3-2-5-3-8-3s-5 1-8 3z' fill='%23FAF6EF'/></svg>">
+<style>
+  :root {
+    --bg: #0E1116;
+    --panel: #151A22;
+    --panel-2: #1B212B;
+    --line: #262E3A;
+    --text: #ECE6DC;
+    --muted: #8B94A3;
+    --accent: #C86A3E;
+    --accent-soft: #E8A87C;
+    --green: #3E9B7A;
+    --red: #C4554D;
+    --font-display: "Fraunces", Georgia, serif;
+    --font-ui: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: var(--font-ui); background: var(--bg); color: var(--text);
+    min-height: 100vh; display: flex; flex-direction: column;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; text-decoration: none; }
+
+  /* top bar */
+  .bar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 24px; border-bottom: 1px solid var(--line);
+  }
+  .brand { display: inline-flex; align-items: center; gap: 10px; }
+  .brand-name { font-family: var(--font-display); font-weight: 600; font-size: 21px; }
+  .chip {
+    font-size: 12.5px; color: var(--muted); border: 1px solid var(--line);
+    padding: 5px 12px; border-radius: 999px; white-space: nowrap;
+  }
+  .chip b { color: var(--text); font-weight: 600; }
+
+  /* layout */
+  .stage {
+    flex: 1; display: grid; grid-template-columns: minmax(0, 1fr) 380px;
+    gap: 0; max-width: 1200px; width: 100%; margin: 0 auto;
+  }
+
+  /* call panel */
+  .call {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 40px 24px; gap: 26px; position: relative;
+  }
+
+  .orb-wrap { position: relative; width: 190px; height: 190px; }
+  .orb {
+    position: absolute; inset: 0; border-radius: 50%;
+    background: radial-gradient(circle at 32% 30%, #E8A87C 0%, #C86A3E 45%, #7A3A20 100%);
+    box-shadow: 0 0 60px 0 rgba(200, 106, 62, .25);
+    transition: box-shadow .3s ease, transform .3s ease;
+  }
+  .ring {
+    position: absolute; inset: -14px; border-radius: 50%;
+    border: 2px solid rgba(200, 106, 62, .35); opacity: 0; transform: scale(.9);
+  }
+  /* states */
+  .idle .orb { filter: saturate(.55) brightness(.8); }
+  .connecting .orb { animation: breathe 1.4s ease-in-out infinite; }
+  .listening .orb { box-shadow: 0 0 80px 4px rgba(62, 155, 122, .35); }
+  .listening .ring { border-color: rgba(62, 155, 122, .5); animation: pulse 1.8s ease-out infinite; }
+  .speaking .orb { animation: breathe 1.1s ease-in-out infinite; box-shadow: 0 0 90px 8px rgba(200, 106, 62, .45); }
+  .speaking .ring { animation: pulse 1.1s ease-out infinite; }
+  @keyframes breathe { 0%,100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+  @keyframes pulse { 0% { opacity: .8; transform: scale(.92); } 100% { opacity: 0; transform: scale(1.25); } }
+
+  .status { font-size: 16px; color: var(--muted); min-height: 24px; text-align: center; }
+  .status.err { color: var(--red); }
+
+  .controls { display: flex; align-items: center; gap: 18px; }
+  .btn-round {
+    width: 64px; height: 64px; border-radius: 50%; border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all .15s ease; color: #fff;
+  }
+  .btn-round svg { width: 26px; height: 26px; }
+  .btn-call { background: var(--green); }
+  .btn-call:hover { filter: brightness(1.12); }
+  .btn-call.live { background: var(--red); }
+  .btn-mute {
+    width: 52px; height: 52px; background: var(--panel-2); border: 1px solid var(--line);
+    color: var(--text);
+  }
+  .btn-mute.muted { background: var(--red); border-color: var(--red); color: #fff; }
+  .btn-mute:disabled { opacity: .35; cursor: default; }
+  .controls-hint { font-size: 13px; color: var(--muted); }
+  .controls-hint a { color: var(--accent-soft); text-decoration: underline; }
+
+  .disclaimer {
+    position: absolute; bottom: 18px; left: 0; right: 0; text-align: center;
+    font-size: 12.5px; color: var(--muted); padding: 0 24px;
+  }
+
+  /* side panel */
+  .side {
+    border-left: 1px solid var(--line); display: flex; flex-direction: column;
+    min-height: 0;
+  }
+  .side h2 {
+    font-size: 13px; font-weight: 600; letter-spacing: .07em; text-transform: uppercase;
+    color: var(--muted); padding: 18px 22px 10px;
+  }
+
+  .switch {
+    display: flex; flex-wrap: wrap; gap: 8px; padding: 16px 22px 0; align-items: center;
+  }
+  .switch a {
+    font-size: 12.5px; font-weight: 600; padding: 5px 14px; border-radius: 999px;
+    border: 1px solid var(--line); color: var(--muted);
+  }
+  .switch a.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+  /* Pills navigate (the sector lives in ?profil=), so a mid-call click would kill the call —
+     grey them out while one is running. */
+  .switch.disabled a { pointer-events: none; opacity: .45; }
+
+  .hints details { margin: 4px 0 12px; }
+  .hints summary {
+    font-size: 13px; font-weight: 600; color: var(--accent-soft); cursor: pointer;
+    list-style: none;
+  }
+  .hints summary::before { content: "▸ "; }
+  .hints details[open] summary::before { content: "▾ "; }
+  .canwont { margin: 8px 0 0; padding: 0; list-style: none; font-size: 13px; color: var(--muted); }
+  .canwont li { padding-left: 20px; position: relative; margin-bottom: 6px; line-height: 1.45; }
+  .canwont li::before { position: absolute; left: 0; }
+  .canwont li.can::before { content: "✓"; color: var(--green); }
+  .canwont li.wont::before { content: "✕"; color: var(--red); }
+
+  .hints { padding: 0 22px 16px; border-bottom: 1px solid var(--line); }
+  .hints p { font-size: 13.5px; color: var(--muted); margin-bottom: 10px; }
+  .hint-line {
+    font-size: 13.5px; background: var(--panel); border: 1px solid var(--line);
+    border-radius: 10px; padding: 8px 12px; margin-bottom: 8px; color: var(--text);
+  }
+  .hints .fict { font-size: 12.5px; color: var(--muted); margin-top: 10px; }
+  .hints .fict b { color: var(--text); font-weight: 600; }
+
+  .transcript { flex: 1; overflow-y: auto; padding: 14px 22px 22px; display: flex; flex-direction: column; gap: 10px; }
+  .transcript:empty::before {
+    content: "Görüşme dökümü burada görünecek.";
+    color: var(--muted); font-size: 13.5px;
+  }
+  .bubble {
+    max-width: 88%; padding: 10px 14px; border-radius: 14px; font-size: 14px; line-height: 1.5;
+    white-space: pre-wrap; word-wrap: break-word;
+  }
+  .bubble.bot { background: var(--panel-2); border: 1px solid var(--line); align-self: flex-start; border-bottom-left-radius: 4px; }
+  .bubble.user { background: var(--accent); color: #fff; align-self: flex-end; border-bottom-right-radius: 4px; }
+  .bubble .who { display: block; font-size: 11px; font-weight: 600; opacity: .65; margin-bottom: 3px; }
+
+  @media (max-width: 900px) {
+    .stage { grid-template-columns: 1fr; }
+    .side { border-left: none; border-top: 1px solid var(--line); }
+    .call { padding: 30px 20px 56px; }
+    .orb-wrap { width: 150px; height: 150px; }
+    .transcript { max-height: 300px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="bar">
+  <a class="brand" href="index.html" title="Umay ana sayfa">
+    <svg width="28" height="28" viewBox="0 0 32 32" aria-hidden="true">
+      <circle cx="16" cy="16" r="15" fill="#C86A3E"/>
+      <path d="M8 19c3-6 6-8 8-8s5 2 8 8c-3-2-5-3-8-3s-5 1-8 3z" fill="#0E1116"/>
+    </svg>
+    <span class="brand-name">umay</span>
+  </a>
+  <span class="chip" id="profileChip">Canlı demo</span>
+</div>
+
+<div class="stage">
+  <main class="call" id="callPanel">
+    <div class="orb-wrap idle" id="orb">
+      <div class="ring"></div>
+      <div class="orb"></div>
+    </div>
+
+    <div class="status" id="status">Görüşmeyi başlatmak için yeşil tuşa basın.</div>
+
+    <div class="controls">
+      <button class="btn-mute" id="muteBtn" title="Mikrofonu kapat/aç" disabled>
+        <svg id="micIcon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+          <path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/>
+        </svg>
+      </button>
+      <button class="btn-round btn-call" id="callBtn" title="Görüşmeyi başlat">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+        </svg>
+      </button>
+      <span class="controls-hint" id="hint">Mikrofon izni istenecektir.</span>
+    </div>
+
+    <div class="disclaimer">
+      Bu bir yapay zeka asistanı demosudur ve kurgusal verilerle çalışır.
+      Lütfen <b>gerçek kişisel bilgilerinizi paylaşmayın</b> — yandaki kurgusal bilgileri kullanın.
+    </div>
+  </main>
+
+  <aside class="side">
+    <div class="switch" id="profileSwitch"></div>
+    <h2>Deneyebilecekleriniz</h2>
+    <div class="hints" id="hintsBox"></div>
+    <h2>Görüşme dökümü</h2>
+    <div class="transcript" id="transcript"></div>
+  </aside>
+</div>
+
+<audio id="botAudio" autoplay playsinline></audio>
+
+<script type="module">
+  import { PipecatClient, RTVIEvent } from "https://esm.sh/@pipecat-ai/client-js@1.13.0";
+  import { SmallWebRTCTransport } from "https://esm.sh/@pipecat-ai/small-webrtc-transport@1.10.6";
+
+  const params = new URLSearchParams(location.search);
+  const BOT_URL = params.get("bot") ?? "http://localhost:7860";
+
+  // An invite link (./umay.sh invite) carries a Daily room and a token minted for it.
+  // That is the only way someone on their own device can reach the bot: it runs on the
+  // operator's laptop with no inbound route, so instead of the guest dialling in, both
+  // sides meet in a Daily room and Daily relays the audio — which also survives the
+  // corporate firewalls that block plain WebRTC's UDP.
+  const ROOM = params.get("room");
+  const ROOM_TOKEN = params.get("t");
+  const REMOTE = Boolean(ROOM);
+
+  // Public self-serve demo: a bot deployed on Pipecat Cloud, started per visitor. The key
+  // below is a *public* Pipecat Cloud key — it is designed to sit in client code and can
+  // only start sessions for this one agent. The real spend controls are elsewhere and are
+  // not optional: MAX_SESSION_SECS on the agent, and the spend limit on the account.
+  // Empty key = feature off, and the page falls back to the guided-session message, so a
+  // half-finished deploy never shows visitors a call button that hangs.
+  const PCC_AGENT = params.get("agent") ?? "umay-demo";
+  const PCC_KEY = params.get("k") ?? "pk_0a8c82dd-1dec-4d8e-ba64-49de10b3ce42";
+  const PUBLIC_DEMO = Boolean(PCC_KEY);
+  const PCC_START = `https://api.pipecat.daily.co/v1/public/${PCC_AGENT}/start`;
+
+  // Both remote paths ride Daily; only the way the room is obtained differs.
+  const USE_DAILY = REMOTE || PUBLIC_DEMO;
+
+  // The bot only ever runs on the operator's machine, so a public visitor with no invite
+  // has nothing to dial. Operator mode = the page is served from localhost, or a bot
+  // address was passed explicitly (…/demo.html?bot=http://localhost:7860 — how the live
+  // site is demoed in the room). Everyone else gets the guided-session message instead of
+  // a doomed connection attempt.
+  const OPERATOR =
+    ["localhost", "127.0.0.1"].includes(location.hostname) || params.has("bot");
+
+  // -- demo profiles -------------------------------------------------------
+  // Mirrors the server's profiles (server/profiles/*.yaml + kb/). On the public demo the
+  // selected key is sent in the start request's body, so the deployed agent answers as the
+  // chosen sector; on local/invited demos, pick the same one here that ./umay.sh start was
+  // given. Pills render in insertion order.
+  const PROFILES = {
+    "banka": {
+      label: "Banka",
+      chip: "Umay Demo Bankası",
+      hints: [
+        "“Kartımdan benim yapmadığım bir harcama var.”  (acil → anında yetkiliye aktarır)",
+        "“Konut kredisi için şube randevusu almak istiyorum.”",
+        "“İhtiyaç kredisi faiz oranı nedir?”",
+      ],
+      fict: `Sorarsa şu <b>kurgusal</b> bilgileri kullanın — Ad: <b>Ayşe Demir</b> ·
+        Telefon: <b>0 555 246 80 13</b>. İsterseniz uydurma bir “TC no” söylemeyi deneyin
+        (<b>11111111111</b>): asistan güvenliğiniz için sizi <b>durduracaktır</b>.`,
+      can: [
+        "Kayıp/çalıntı kart veya yapılmayan işlemde hiçbir bilgi toplamadan anında yetkiliye aktarır",
+        "Şube işlemleri (hesap açılışı, kredi) için demo takviminden randevu oluşturur",
+        "Onaydan önce ad, telefon ve gün/saat bilgisini geri okuyarak teyit alır",
+        "Faiz, çalışma saatleri, gerekli belgeler gibi genel bilgileri kurum belgesinden yanıtlar",
+      ],
+      wont: [
+        "TC kimlik, kart numarası, şifre veya SMS kodu asla istemez — söylerseniz sizi durdurur",
+        "Bakiye, limit gibi hesaba özel bilgi vermez; yetkiliye aktarır",
+        "Belgede olmayan hiçbir bilgiyi uydurmaz",
+      ],
+    },
+    "enerji": {
+      label: "Enerji",
+      chip: "Umay Demo Enerji",
+      hints: [
+        "“Sokağımızda direkten kopmuş bir kablo var.”  (can güvenliği → anında yetkiliye aktarır)",
+        "“Mahallemde planlı kesinti var mı?”",
+        "“Yeni abonelik için hangi belgeler gerekiyor?”",
+      ],
+      fict: `Sorarsa şu <b>kurgusal</b> bilgileri kullanın — Ad: <b>Ayşe Demir</b> ·
+        Telefon: <b>0 555 246 80 13</b>. İsterseniz “borcum ne kadar?” diye sormayı deneyin:
+        asistan aboneye özel bilgi vermeden sizi <b>yetkiliye aktaracaktır</b>.`,
+      can: [
+        "Tehlike bildiriminde (kopuk kablo, yanık kokusu) hiçbir bilgi toplamadan anında yetkiliye aktarır",
+        "Planlı kesinti programı ve abonelik belgeleri gibi genel bilgileri kurum belgesinden yanıtlar",
+        "Abonelik ve sayaç işlemleri için müşteri merkezi randevusu oluşturur",
+        "Onaydan önce ad, telefon ve gün/saat bilgisini geri okuyarak teyit alır",
+      ],
+      wont: [
+        "Aboneye özel borç, tüketim veya fatura bilgisi vermez; yetkiliye aktarır",
+        "TC kimlik veya abone numarası istemez — söylerseniz sizi durdurur",
+        "Belgede olmayan hiçbir bilgiyi uydurmaz",
+      ],
+    },
+    "oto-servis": {
+      label: "Otomotiv",
+      chip: "Umay Demo Oto Servis",
+      hints: [
+        "“Aracıma periyodik bakım için randevu almak istiyorum.”",
+        "“Motor yağı değişimi ne kadar sürüyor, fiyatı nedir?”",
+        "“Bir yetkiliyle görüşmek istiyorum.”",
+      ],
+      fict: `Sorarsa şu <b>kurgusal</b> bilgileri kullanın — Ad: <b>Ayşe Demir</b> ·
+        Telefon: <b>0 555 246 80 13</b> · Plaka: <b>00 ABC 123</b> · Araç: <b>beyaz Renault Clio</b>`,
+      can: [
+        "Takvim aracıyla uygun saati bulur, randevuyu kaydeder",
+        "Onaydan önce adı, telefonu rakam rakam, plakayı harf harf geri okur",
+        "Fiyat ve süre sorularını işletme belgesinden yanıtlar",
+        "Belgede olmayan konularda görüşmeyi yetkiliye aktarır",
+      ],
+      wont: [
+        "Belgede yazmayan fiyatı veya bilgiyi uydurmaz",
+        "Gerçek kişisel bilgi istemez — demo kurgusal verilerle çalışır",
+      ],
+    },
+    "saglik": {
+      label: "Sağlık",
+      chip: "Umay Demo Tıp Merkezi",
+      hints: [
+        "“Dahiliye için randevu almak istiyorum.”",
+        "“Kan tahlili öncesi aç mı gelmeliyim?”",
+        "“Başım ağrıyor, hangi ilacı almalıyım?”  (tıbbi tavsiye vermez)",
+      ],
+      fict: `Sorarsa şu <b>kurgusal</b> bilgileri kullanın — Ad: <b>Ayşe Demir</b> ·
+        Telefon: <b>0 555 246 80 13</b>. Randevu için bölüm adı yeterlidir — asistan
+        hastalık veya şikayet detayı <b>sormaz</b>.`,
+      can: [
+        "Bölüm adıyla muayene randevusu oluşturur; hastalık detayı sormaz",
+        "Tahlil hazırlığı, poliklinik saatleri gibi genel bilgileri kurum belgesinden yanıtlar",
+        "Acil tıbbi durumda 112'ye yönlendirir ve anında yetkiliye aktarır",
+        "Onaydan önce ad, telefon, bölüm ve gün/saat bilgisini geri okuyarak teyit alır",
+      ],
+      wont: [
+        "Tanı, tedavi veya ilaç önerisi asla vermez",
+        "Tahlil sonucu gibi kişiye özel bilgiyi paylaşmaz; yetkiliye aktarır",
+        "TC kimlik numarası istemez",
+      ],
+    },
+    "egitim": {
+      label: "Eğitim",
+      chip: "Umay Demo Koleji",
+      hints: [
+        "“Okul kaydı için hangi belgeler gerekiyor?”",
+        "“Veli görüşmesi randevusu almak istiyorum.”",
+        "“Kızımın notlarını öğrenebilir miyim?”  (öğrenciye özel bilgi vermez)",
+      ],
+      fict: `Sorarsa şu <b>kurgusal</b> bilgileri kullanın — Ad: <b>Ayşe Demir</b> ·
+        Telefon: <b>0 555 246 80 13</b>.`,
+      can: [
+        "Veli görüşmesi ve okul tanıtım randevusu oluşturur",
+        "Kayıt şartları, ücret ve burs koşulları gibi genel bilgileri kurum belgesinden yanıtlar",
+        "Öğrenci güvenliğine ilişkin bildirimlerde anında yetkiliye aktarır",
+        "Onaydan önce ad, telefon ve gün/saat bilgisini geri okuyarak teyit alır",
+      ],
+      wont: [
+        "Not, devamsızlık gibi öğrenciye özel bilgi vermez — telefonda veli doğrulanamaz",
+        "TC kimlik veya öğrenci numarası istemez",
+        "Belgede olmayan hiçbir bilgiyi uydurmaz",
+      ],
+    },
+    "kamu": {
+      label: "Kamu",
+      chip: "Umay Demo Belediyesi",
+      hints: [
+        "“İşyeri ruhsatı için hangi belgeler gerekiyor?”",
+        "“Nikah başvurusu için randevu almak istiyorum.”",
+        "“Başvurumun durumunu öğrenebilir miyim?”  (kişiye özel sorgu yapmaz)",
+      ],
+      fict: `Sorarsa şu <b>kurgusal</b> bilgileri kullanın — Ad: <b>Ayşe Demir</b> ·
+        Telefon: <b>0 555 246 80 13</b>. İsterseniz uydurma bir “TC no” söylemeyi deneyin
+        (<b>11111111111</b>): asistan güvenliğiniz için sizi <b>durduracaktır</b>.`,
+      can: [
+        "Başvuru şartları, gerekli belgeler ve harçlar gibi genel bilgileri kurum belgesinden yanıtlar",
+        "Birim ve vezne randevusu oluşturur",
+        "Acil ve hassas bildirimlerde hiçbir bilgi toplamadan anında yetkiliye aktarır",
+        "Onaydan önce ad, telefon ve gün/saat bilgisini geri okuyarak teyit alır",
+      ],
+      wont: [
+        "TC kimlik numarası asla istemez ve TC ile sorgu yapmaz — söylerseniz sizi durdurur",
+        "Kişiye özel dosya, başvuru durumu veya borç bilgisi vermez; yetkiliye aktarır",
+        "Belgede olmayan hiçbir bilgiyi uydurmaz",
+      ],
+    },
+  };
+  // A per-prospect trial link (issue #28) carries a key that isn't one of the sectors
+  // above — the server's disk-validated profile catalog is the real authority (Hard Rule
+  // 8: client proposes, server authorizes), so the raw key rides through unchanged instead
+  // of being coerced to a default. PROFILES here only supplies label/hint COPY for the
+  // sectors it knows about; an unrecognized key gets generic prospect-trial copy instead.
+  const profileKey = new URLSearchParams(location.search).get("profil") || "banka";
+  const isProspectProfile = !(profileKey in PROFILES);
+  // Generic because it has to be — one page serves every prospect key, and the scenario
+  // itself lives server-side in profiles/<key>.yaml. It still has to say something: an
+  // empty hint list in front of someone trialling unattended, with no founder to prompt
+  // them, is a page that tells them nothing to try. The written instructions that go out
+  // with the link are docs/sales/deneme-talimati.md; this is the copy of them on the page.
+  const PROSPECT_FALLBACK = {
+    label: "Deneme", chip: "Umay Deneme Bağlantısı",
+    hints: [
+      "“Merhaba, randevu almak istiyorum.”",
+      "“Çalışma saatleriniz nedir?”",
+      "“Bir yetkiliyle görüşebilir miyim?”",
+    ],
+    fict: `Sorarsa şu <b>kurgusal</b> bilgileri kullanın — Ad: <b>Ayşe Demir</b> ·
+      Telefon: <b>0 555 246 80 13</b> · Plaka: <b>00 ABC 123</b>. Gerçek ad, telefon,
+      adres veya TC kimlik numarası <b>paylaşmayın</b> — bu bir demo hattıdır.`,
+    can: [
+      "Kendini yapay zeka asistanı olarak tanıtır ve neden aradığınızı sorar",
+      "İşletmenin kendi belgesindeki bilgileri (saatler, hizmetler, fiyatlar) yanıtlar",
+      "Randevu oluşturur; onaydan önce ad, telefon ve gün/saati geri okuyarak teyit alır",
+      "Bilmediği veya yetkisi dışındaki her konuda yetkiliye aktarır",
+    ],
+    wont: [
+      "Gerçek kişisel bilgi istemez — bu bağlantı kurgusal verilerle çalışır",
+      "TC kimlik numarası, kart numarası, şifre veya SMS kodu asla istemez",
+      "Belgede olmayan hiçbir bilgiyi uydurmaz",
+      "Deneme süresi dolduğunda görüşmeye başlamaz, kısa bir bilgi verip kapatır",
+    ],
+  };
+  const profile = PROFILES[profileKey] || PROSPECT_FALLBACK;
+
+  document.getElementById("profileChip").innerHTML =
+    `Canlı demo · <b>${profile.chip}</b> (kurgusal işletme)`;
+  // Sector pills. On the public demo the choice rides the start request's body, so one
+  // deployed agent serves every sector; on local/invited demos the pill is a UI hint and
+  // the bot's DEMO_PROFILE must match. Links preserve the other query params (?bot=,
+  // ?health=, invite tokens) — the sector must not eat an operator's overrides. A
+  // prospect-trial link is scoped to one business, so the switcher (irrelevant sectors)
+  // is hidden rather than offered.
+  const switchEl = document.getElementById("profileSwitch");
+  if (isProspectProfile) {
+    switchEl.innerHTML = "";
+    switchEl.style.display = "none";
+  } else {
+    switchEl.innerHTML = Object.entries(PROFILES).map(([k, p]) => {
+      const u = new URL(location.href);
+      u.searchParams.set("profil", k);
+      return `<a href="${u.pathname + u.search}" class="${k === profileKey ? "active" : ""}">${p.label}</a>`;
+    }).join("");
+  }
+  document.getElementById("hintsBox").innerHTML = `
+    <p>Umay sizi karşıladıktan sonra şunları söyleyebilirsiniz:</p>
+    ${profile.hints.map(h => `<div class="hint-line">${h}</div>`).join("")}
+    <details>
+      <summary>Umay bu profilde neler yapar?</summary>
+      <ul class="canwont">
+        ${profile.can.map(c => `<li class="can">${c}</li>`).join("")}
+        ${profile.wont.map(w => `<li class="wont">${w}</li>`).join("")}
+      </ul>
+    </details>
+    <p class="fict">${profile.fict}</p>`;
+
+  const orb = document.getElementById("orb");
+  const statusEl = document.getElementById("status");
+  const callBtn = document.getElementById("callBtn");
+  const muteBtn = document.getElementById("muteBtn");
+  const hintEl = document.getElementById("hint");
+  const transcriptEl = document.getElementById("transcript");
+  const botAudio = document.getElementById("botAudio");
+
+  let client = null;
+  let connected = false;
+  let busy = false;
+
+  function setOrb(state) { orb.className = "orb-wrap " + state; }
+  function setStatus(text, isErr = false) {
+    statusEl.textContent = text;
+    statusEl.classList.toggle("err", isErr);
+  }
+
+  // -- transcript ---------------------------------------------------------
+  // One bubble per speaker turn: consecutive chunks from the same speaker
+  // append to the same bubble; a speaker change starts a new one.
+  let lastRole = null, lastBubble = null;
+  function addText(role, text, replace = false) {
+    if (!text) return;
+    if (role !== lastRole || lastBubble === null) {
+      lastBubble = document.createElement("div");
+      lastBubble.className = "bubble " + role;
+      const who = document.createElement("span");
+      who.className = "who";
+      who.textContent = role === "bot" ? "Umay" : "Siz";
+      lastBubble.appendChild(who);
+      const span = document.createElement("span");
+      span.className = "txt";
+      lastBubble.appendChild(span);
+      transcriptEl.appendChild(lastBubble);
+      lastRole = role;
+    }
+    const span = lastBubble.querySelector(".txt");
+    if (replace) span.textContent = text;
+    else span.textContent = (span.textContent ? span.textContent + " " : "") + text;
+    transcriptEl.scrollTop = transcriptEl.scrollHeight;
+  }
+
+  // -- call lifecycle -----------------------------------------------------
+  async function startCall() {
+    // A visitor with no invite, no bot address and no deployed public agent has nothing to
+    // reach; say so at once rather than after a timeout.
+    if (!OPERATOR && !REMOTE && !PUBLIC_DEMO) return guidedSessionOnly();
+
+    // Ask for the microphone up front. The SDK asks anyway, but a denial surfaces there as
+    // a minified fatal error deep inside the start call — which reads to the visitor as
+    // "the demo is broken" when the real answer is one browser permission. Doing it here
+    // turns that into a sentence they can act on.
+    try {
+      const probe = await navigator.mediaDevices.getUserMedia({ audio: true });
+      probe.getTracks().forEach((t) => t.stop()); // release it; the SDK opens its own
+    } catch {
+      return resetUI(
+        "Mikrofon izni gerekiyor. Tarayıcınızın adres çubuğundaki mikrofon simgesinden izin verip tekrar deneyin.",
+        true,
+      );
+    }
+
+    busy = true;
+    callBtn.disabled = true;
+    switchEl.classList.add("disabled");
+    setOrb("connecting");
+    setStatus("Bağlanılıyor…");
+    hintEl.textContent = "";
+
+    // Prime playback inside the click gesture: the bot's track arrives seconds later,
+    // outside the gesture, and stricter autoplay policies (Safari) would block it then.
+    botAudio.muted = false;
+    botAudio.play().catch(() => {});
+
+    // daily-transport pulls in daily-js (~1 MB), so it is fetched only for invite links;
+    // a laptop demo keeps the small SmallWebRTC path it has always used.
+    let transport;
+    if (USE_DAILY) {
+      const { DailyTransport } = await import(
+        "https://esm.sh/@pipecat-ai/daily-transport@1.6.8"
+      );
+      transport = new DailyTransport();
+    } else {
+      transport = new SmallWebRTCTransport();
+    }
+
+    client = new PipecatClient({ transport, enableMic: true, enableCam: false });
+
+    client.on(RTVIEvent.TrackStarted, (track, participant) => {
+      // SmallWebRTC's remote-track path fires this with NO participant argument
+      // (only the local mic track carries {local: true}) — so the check must be
+      // "not explicitly local", not "explicitly remote", or the bot stays silent.
+      if (track.kind !== "audio" || participant?.local) return;
+      botAudio.srcObject = new MediaStream([track]);
+      botAudio.play().catch(() =>
+        setStatus("Ses başlatılamadı — sayfada herhangi bir yere tıklayın.", true));
+    });
+
+    client.on(RTVIEvent.BotReady, () => {
+      connected = true;
+      busy = false;
+      callBtn.disabled = false;
+      callBtn.classList.add("live");
+      callBtn.title = "Görüşmeyi bitir";
+      muteBtn.disabled = false;
+      setOrb("listening");
+      setStatus("Umay sizi dinliyor…");
+    });
+
+    client.on(RTVIEvent.UserTranscript, (data) => {
+      if (data.final) addText("user", data.text);
+    });
+    client.on(RTVIEvent.BotOutput, (data) => {
+      // Each sentence arrives twice: once as canonical LLM text when the bot starts
+      // speaking (spoken_status "new") and once after synthesis ("completed", with the
+      // TTS-normalised wording — digits spelled out as words). Render only the canonical
+      // one; accept a missing spoken_status so an older server still shows something.
+      if (data.spoken_status && data.spoken_status !== "new") return;
+      if (data.text) addText("bot", data.text);
+    });
+
+    client.on(RTVIEvent.UserStartedSpeaking, () => {
+      if (!connected) return;
+      setOrb("listening");
+      setStatus("Umay sizi dinliyor…");
+    });
+    client.on(RTVIEvent.BotStartedSpeaking, () => {
+      if (!connected) return;
+      setOrb("speaking");
+      setStatus("Umay konuşuyor…");
+    });
+    client.on(RTVIEvent.BotStoppedSpeaking, () => {
+      if (!connected) return;
+      setOrb("listening");
+      setStatus("Umay sizi dinliyor…");
+    });
+
+    client.on(RTVIEvent.Disconnected, () => resetUI("Görüşme sona erdi. Tekrar deneyebilirsiniz."));
+    client.on(RTVIEvent.Error, () => {
+      if (!connected && busy) connectFailed();
+    });
+
+    try {
+      let connectParams;
+      if (REMOTE) {
+        connectParams = { url: ROOM, token: ROOM_TOKEN };
+      } else if (PUBLIC_DEMO) {
+        // Start the agent ourselves rather than handing the endpoint to the SDK.
+        // client.connect({endpoint}) is deprecated in 1.13 and its replacement threw a
+        // fatal, unreadable error *after* a successful 200 from this very endpoint. The
+        // request is one fetch; doing it here reduces the public path to the same
+        // {url, token} join that the invite links already use and that is known to work.
+        const res = await fetch(PCC_START, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${PCC_KEY}`,
+            "Content-Type": "application/json",
+          },
+          // The nested `body` lands on the agent as runner_args.body; the server validates
+          // the key against its profile catalog and falls back to the default if unknown.
+          body: JSON.stringify({ createDailyRoom: true, body: { profil: profileKey } }),
+        });
+        if (!res.ok) throw new Error(`start failed: ${res.status} ${await res.text()}`);
+        const session = await res.json();
+        connectParams = { url: session.dailyRoom, token: session.dailyToken };
+      } else {
+        connectParams = { webrtcRequestParams: { endpoint: `${BOT_URL}/api/offer` } };
+      }
+      await client.connect(connectParams);
+    } catch (e) {
+      console.error(e);
+      const msg = String(e?.message ?? e);
+      if (msg.includes("Permission") || msg.includes("NotAllowed")) {
+        resetUI("Mikrofon izni verilmedi. Tarayıcı ayarlarından izin verip yeniden deneyin.", true);
+      } else {
+        connectFailed();
+      }
+    }
+  }
+
+  function connectFailed() {
+    if (REMOTE) {
+      // Invites expire, and the room is deleted with them — by far the likeliest reason a
+      // guest's link stops working, so name it instead of blaming their connection.
+      resetUI("Bu davet linkinin süresi dolmuş görünüyor.", true);
+      hintEl.innerHTML =
+        'Yeni bir link isteyin: <a href="mailto:contact@umayconnect.org">contact@umayconnect.org</a>';
+    } else if (OPERATOR) {
+      resetUI(`Bağlantı kurulamadı (${BOT_URL}). Demo sunucusunun çalıştığından emin olun.`, true);
+    } else if (PUBLIC_DEMO) {
+      // Most likely an occupied/limited agent or a session cap on the account — a visitor
+      // can only usefully be told to try again.
+      resetUI("Demo şu anda meşgul. Lütfen birkaç dakika sonra tekrar deneyin.", true);
+      hintEl.innerHTML =
+        'Sorun sürerse bize yazın: <a href="mailto:contact@umayconnect.org">contact@umayconnect.org</a>';
+    } else {
+      guidedSessionOnly();
+    }
+  }
+
+  function guidedSessionOnly() {
+    resetUI("Canlı demo şu anda yalnızca planlı tanıtım oturumlarında açık.", true);
+    hintEl.innerHTML =
+      'Denemek ister misiniz? Bize yazın: <a href="mailto:contact@umayconnect.org">contact@umayconnect.org</a>';
+  }
+
+  async function endCall() {
+    try { await client?.disconnect(); } catch {}
+    resetUI("Görüşme sona erdi. Tekrar deneyebilirsiniz.");
+  }
+
+  function resetUI(message, isErr = false) {
+    connected = false;
+    busy = false;
+    client = null;
+    callBtn.disabled = false;
+    callBtn.classList.remove("live");
+    callBtn.title = "Görüşmeyi başlat";
+    switchEl.classList.remove("disabled");
+    muteBtn.disabled = true;
+    muteBtn.classList.remove("muted");
+    setOrb("idle");
+    setStatus(message, isErr);
+    lastRole = null;
+    lastBubble = null;
+  }
+
+  // Availability is a founder-controlled flag, not a GPU pod's health: the public demo
+  // always answers on the hosted voice (owned voice stays internal-only pre-gate, ADR-0008's
+  // A6 box), so there is nothing left to warm up. `./umay.sh public on/off` writes and
+  // publishes this file — ask it first, and offer a call only when it says open. (ADR-0014 /
+  // issue #26.)
+  const DEMO_STATUS = params.get("status") ?? "status.json";
+
+  async function gateOnAvailability() {
+    callBtn.disabled = true;
+    setStatus("Demo durumu kontrol ediliyor…");
+    let open = false;
+    try {
+      const ctl = new AbortController();
+      const timer = setTimeout(() => ctl.abort(), 6000); // no answer = don't hang
+      const res = await fetch(DEMO_STATUS, { signal: ctl.signal, cache: "no-store" });
+      clearTimeout(timer);
+      open = res.ok && (await res.json()).open === true;
+    } catch {
+      open = false;
+    }
+    if (open) {
+      callBtn.disabled = false;
+      setStatus("Görüşmeyi başlatmak için yeşil tuşa basın.");
+      return;
+    }
+    callBtn.disabled = true;
+    setStatus("Canlı demo şu anda kapalı.", true);
+    // The closed page is a lead form in disguise: invite the visitor to ask us to open the
+    // demo for them, with the subject and body prefilled so the mail takes one tap to send.
+    hintEl.innerHTML =
+      'Sizin için hemen açabiliriz — bize yazın, kısa sürede yanıtlayalım: ' +
+      '<a href="mailto:contact@umayconnect.org' +
+      '?subject=' + encodeURIComponent("Umay canlı demo talebi") +
+      '&body=' + encodeURIComponent(
+        "Merhaba,\n\nCanlı demoyu denemek istiyorum. Uygun olduğunuzda açar mısınız?\n\n" +
+        "İşletme / sektör: \nAd: \n"
+      ) + '">contact@umayconnect.org</a>';
+  }
+
+  // A prospect-trial link (?profil=<key> for a key PROFILES doesn't know) is a standing
+  // link for its own trial window — it must not go dark because the founder toggled the
+  // generic public page closed for the weekend. The server-side trial_open() check in
+  // bot.py remains the real authority regardless of whether this button is offered.
+  if (PUBLIC_DEMO && !REMOTE && !OPERATOR && !isProspectProfile) gateOnAvailability();
+
+  callBtn.addEventListener("click", () => {
+    if (busy) return;
+    if (connected) endCall();
+    else startCall();
+  });
+
+  // Last-resort unlock: if the browser blocked playback anyway, any click resumes it.
+  document.addEventListener("click", () => {
+    if (botAudio.srcObject && botAudio.paused) botAudio.play().catch(() => {});
+  });
+
+  muteBtn.addEventListener("click", () => {
+    if (!client || !connected) return;
+    const enable = !client.isMicEnabled;
+    client.enableMic(enable);
+    muteBtn.classList.toggle("muted", !enable);
+    setStatus(enable ? "Umay sizi dinliyor…" : "Mikrofon kapalı.");
+  });
+</script>
+
+</body>
+</html>
