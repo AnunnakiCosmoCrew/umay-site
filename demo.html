@@ -181,7 +181,7 @@
      together; a short window (1024x400, say) keeps the normal scrolling page, so the
      orb keeps its size and the disclaimer never covers the call buttons. */
   @media (min-width: 901px) and (min-height: 640px) {
-    body { height: 100vh; height: 100dvh; overflow: hidden; }
+    body { min-height: 0; height: 100vh; height: 100dvh; overflow: hidden; }
     .stage { min-height: 0; }
     .call { min-height: 0; }
     .side { min-height: 0; overflow-y: auto; }
