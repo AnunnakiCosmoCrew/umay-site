@@ -171,9 +171,18 @@
   @media (max-width: 900px) {
     .stage { grid-template-columns: 1fr; }
     .side { border-left: none; border-top: 1px solid var(--line); }
-    .call { padding: 30px 20px 56px; }
+    .call { padding: 30px 20px 56px; justify-content: flex-start; }
     .orb-wrap { width: 150px; height: 150px; }
     .transcript { max-height: 300px; }
+  }
+  /* Desktop: lock the stage to the viewport so the transcript scrolls inside the side
+     column instead of stretching the grid row (which re-centred, and sank, the orb). */
+  @media (min-width: 901px) {
+    body { height: 100vh; height: 100dvh; overflow: hidden; }
+    .stage { min-height: 0; }
+    .call { min-height: 0; }
+    .side { min-height: 0; overflow-y: auto; }
+    .transcript { flex: 1 1 auto; min-height: 180px; }
   }
 </style>
 </head>
@@ -503,6 +512,8 @@
   let lastRole = null, lastBubble = null;
   function addText(role, text, replace = false) {
     if (!text) return;
+    // Measured before the DOM grows: was the viewer at the bottom?
+    const stick = transcriptEl.scrollHeight - transcriptEl.scrollTop - transcriptEl.clientHeight < 40;
     if (role !== lastRole || lastBubble === null) {
       lastBubble = document.createElement("div");
       lastBubble.className = "bubble " + role;
@@ -519,7 +530,8 @@
     const span = lastBubble.querySelector(".txt");
     if (replace) span.textContent = text;
     else span.textContent = (span.textContent ? span.textContent + " " : "") + text;
-    transcriptEl.scrollTop = transcriptEl.scrollHeight;
+    // Follow the conversation, unless the viewer scrolled up on purpose.
+    if (stick) transcriptEl.scrollTop = transcriptEl.scrollHeight;
   }
 
   // -- call lifecycle -----------------------------------------------------
