@@ -634,11 +634,15 @@
       if (data.final) addText("user", data.text);
     });
     client.on(RTVIEvent.BotOutput, (data) => {
-      // Each sentence arrives twice: once as canonical LLM text when the bot starts
-      // speaking (spoken_status "new") and once after synthesis ("completed", with the
-      // TTS-normalised wording — digits spelled out as words). Render only the canonical
-      // one; accept a missing spoken_status so an older server still shows something.
-      if (data.spoken_status && data.spoken_status !== "new") return;
+      // Each sentence arrives twice: once when the bot starts speaking (spoken_status
+      // "new") and once after synthesis ("completed"). "new" is the LLM's raw sentence,
+      // pushed BEFORE our TTS text filters (PauseDemandFilter, PhoneTurnFilter,
+      // StiffAskFilter) run, so it can show a sentence the voice never said (#125).
+      // "completed" is what was actually synthesised: filtered, and TTS-normalised (digits
+      // spelled out as words). Render only that, so the screen matches the audio; a
+      // dropped sentence never completes and never appears. Accept a missing spoken_status
+      // so an older server still shows something.
+      if (data.spoken_status && data.spoken_status !== "completed") return;
       if (data.text) addText("bot", data.text);
     });
 
