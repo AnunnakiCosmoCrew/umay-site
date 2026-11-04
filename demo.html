@@ -201,7 +201,7 @@
      size and the disclaimer never covers the call buttons. The rail scrolls as a whole if
      the window is short, with the call block pinned to its top so the orb stays put. */
   @media (min-width: 901px) and (min-height: 640px) {
-    body { height: 100vh; height: 100dvh; overflow: hidden; }
+    body { min-height: 0; height: 100vh; height: 100dvh; overflow: hidden; }
     .stage { min-height: 0; }
     .rail { overflow-y: auto; }
     .call { position: sticky; top: 0; background: var(--bg); z-index: 1; }
