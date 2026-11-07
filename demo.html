@@ -3,6 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0C1328">
 <title>Umay — Canlı Demo</title>
 <meta name="description" content="Umay yapay zeka asistanıyla canlı Türkçe sesli görüşme demosu.">
 <meta property="og:title" content="Umay — Canlı Demo">
@@ -13,22 +15,24 @@
 <meta name="twitter:card" content="summary">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='14' fill='%23B4532A'/><path d='M8 19c3-6 6-8 8-8s5 2 8 8c-3-2-5-3-8-3s-5 1-8 3z' fill='%23FAF6EF'/></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='14' fill='%231D3FA8'/><path d='M8 19c3-6 6-8 8-8s5 2 8 8c-3-2-5-3-8-3s-5 1-8 3z' fill='%23FFFFFF'/></svg>">
 <style>
   :root {
-    --bg: #0E1116;
-    --panel: #151A22;
-    --panel-2: #1B212B;
-    --line: #262E3A;
-    --text: #ECE6DC;
-    --muted: #8B94A3;
-    --accent: #C86A3E;
-    --accent-soft: #E8A87C;
-    --green: #3E9B7A;
-    --red: #C4554D;
-    --font-display: "Fraunces", Georgia, serif;
-    --font-ui: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    /* İznik palette (#193), dark set; the landing page's call-card tokens mirror these. */
+    --bg: #0C1328;
+    --panel: #121B36;
+    --panel-2: #1A2546;
+    --line: #2E3C66;
+    --text: #E9EEF8;
+    --muted: #9AA7C4;
+    --accent: #2E55D4;
+    --accent-soft: #8FA9FF;
+    --green: #3FC9C2;
+    --red: #F0646E;
+    --font-display: "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
+    --font-ui: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    color-scheme: dark;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
@@ -44,7 +48,7 @@
     padding: 16px 24px; gap: 12px; border-bottom: 1px solid var(--line);
   }
   .brand { display: inline-flex; align-items: center; gap: 10px; }
-  .brand-name { font-family: var(--font-display); font-weight: 600; font-size: 21px; }
+  .brand-name { font-family: var(--font-display); font-weight: 700; font-size: 21px; }
   .chip {
     font-size: 12.5px; color: var(--muted); border: 1px solid var(--line);
     padding: 5px 12px; border-radius: 999px; white-space: nowrap;
@@ -74,20 +78,20 @@
   .orb-wrap { position: relative; width: 140px; height: 140px; margin: 10px 0 2px; }
   .orb {
     position: absolute; inset: 0; border-radius: 50%;
-    background: radial-gradient(circle at 32% 30%, #E8A87C 0%, #C86A3E 45%, #7A3A20 100%);
-    box-shadow: 0 0 40px 0 rgba(200, 106, 62, .25);
+    background: radial-gradient(circle at 32% 30%, #8FA9FF 0%, #2E55D4 45%, #15308A 100%);
+    box-shadow: 0 0 40px 0 rgba(46, 85, 212, .3);
     transition: box-shadow .3s ease, transform .3s ease;
   }
   .ring {
     position: absolute; inset: -11px; border-radius: 50%;
-    border: 2px solid rgba(200, 106, 62, .35); opacity: 0; transform: scale(.9);
+    border: 2px solid rgba(46, 85, 212, .4); opacity: 0; transform: scale(.9);
   }
   /* states */
   .idle .orb { filter: saturate(.55) brightness(.8); }
   .connecting .orb { animation: breathe 1.4s ease-in-out infinite; }
-  .listening .orb { box-shadow: 0 0 56px 3px rgba(62, 155, 122, .35); }
-  .listening .ring { border-color: rgba(62, 155, 122, .5); animation: pulse 1.8s ease-out infinite; }
-  .speaking .orb { animation: breathe 1.1s ease-in-out infinite; box-shadow: 0 0 64px 6px rgba(200, 106, 62, .45); }
+  .listening .orb { box-shadow: 0 0 56px 3px rgba(63, 201, 194, .35); }
+  .listening .ring { border-color: rgba(63, 201, 194, .5); animation: pulse 1.8s ease-out infinite; }
+  .speaking .orb { animation: breathe 1.1s ease-in-out infinite; box-shadow: 0 0 64px 6px rgba(46, 85, 212, .5); }
   .speaking .ring { animation: pulse 1.1s ease-out infinite; }
   @keyframes breathe { 0%,100% { transform: scale(1); } 50% { transform: scale(1.05); } }
   @keyframes pulse { 0% { opacity: .8; transform: scale(.92); } 100% { opacity: 0; transform: scale(1.25); } }
@@ -183,6 +187,20 @@
   .bubble.user { background: var(--accent); color: #fff; align-self: flex-end; border-bottom-right-radius: 4px; }
   .bubble .who { display: block; font-size: 11px; font-weight: 600; opacity: .65; margin-bottom: 3px; }
 
+  .slotreq { max-width: 560px; margin: 8px auto 0; padding: 0 16px; text-align: center; }
+  .slotreq h2 { font-family: var(--font-display); font-size: 18px; margin: 0 0 6px; }
+  .slotreq p { font-size: 13px; line-height: 1.5; color: var(--muted); margin: 0 0 10px; }
+  .slotreq form { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+  .slotreq input, .slotreq select { flex: 1 1 220px; min-width: 0; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--line); background: var(--panel); color: var(--text); font: inherit; }
+  .slotreq button { padding: 10px 16px; border-radius: 8px; border: 0; background: var(--accent); color: #fff; font: inherit; font-weight: 600; cursor: pointer; }
+  .slotreq button:disabled { opacity: .55; cursor: default; }
+  .slotreq .msg { margin-top: 10px; min-height: 1.4em; color: var(--accent-soft); }
+  .slotreq .msg.err { color: var(--red); }
+  .fb fieldset { border: 0; padding: 0; margin: 0 0 12px; text-align: left; }
+  .fb legend { font-size: 14px; margin-bottom: 6px; padding: 0; }
+  .fb label { display: inline-flex; align-items: center; gap: 4px; margin-right: 12px; font-size: 14px; }
+  .fb textarea { width: 100%; box-sizing: border-box; min-height: 64px; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--line); background: var(--panel); color: var(--text); font: inherit; }
+  .fb .check { display: flex; margin: 0 0 12px; }
   .disclaimer {
     text-align: center; font-size: 12.5px; line-height: 1.45; color: var(--muted);
     padding: 10px 24px 14px; border-top: 1px solid var(--line);
@@ -215,8 +233,8 @@
 <div class="bar">
   <a class="brand" href="index.html" title="Umay ana sayfa">
     <svg width="28" height="28" viewBox="0 0 32 32" aria-hidden="true">
-      <circle cx="16" cy="16" r="15" fill="#C86A3E"/>
-      <path d="M8 19c3-6 6-8 8-8s5 2 8 8c-3-2-5-3-8-3s-5 1-8 3z" fill="#0E1116"/>
+      <circle cx="16" cy="16" r="15" fill="#2E55D4"/>
+      <path d="M8 19c3-6 6-8 8-8s5 2 8 8c-3-2-5-3-8-3s-5 1-8 3z" fill="#FFFFFF"/>
     </svg>
     <span class="brand-name">umay</span>
   </a>
@@ -262,6 +280,43 @@
   </section>
 </main>
 
+<section class="slotreq" id="slotReq" hidden aria-label="Demo talebi">
+  <h2>Demoyu kendi zamanınızda deneyin</h2>
+  <p>E-posta adresinizi yazın; yaklaşık 5 dakika içinde, başlangıç ve bitiş saati belli,
+    süreli bir demo bağlantısı gönderelim (sistem zaten açıksa birkaç saniye içinde). Adresiniz yalnızca bu bağlantıyı göndermek için kullanılır.</p>
+  <form id="slotForm">
+    <select id="slotSector" aria-label="Sektör (isteğe bağlı)"></select>
+    <input type="email" id="slotEmail" required autocomplete="email" placeholder="ad@sirket.com" aria-label="E-posta adresi">
+    <button type="submit" id="slotBtn">Demo iste</button>
+  </form>
+  <div class="msg" id="slotMsg" role="status"></div>
+</section>
+
+<section class="slotreq fb" id="fbSec" hidden aria-label="Geri bildirim">
+  <h2>Görüşmeniz nasıldı?</h2>
+  <p>Üç kısa soru; yanıtlarınız yalnızca ürünü geliştirmek için kullanılır.</p>
+  <form id="fbForm">
+    <fieldset><legend>Sizi anladı mı? (1 hiç, 5 tamamen)</legend>
+      <label><input type="radio" name="understood" value="1" required> 1</label>
+      <label><input type="radio" name="understood" value="2"> 2</label>
+      <label><input type="radio" name="understood" value="3"> 3</label>
+      <label><input type="radio" name="understood" value="4"> 4</label>
+      <label><input type="radio" name="understood" value="5"> 5</label>
+    </fieldset>
+    <fieldset><legend>İşletmeniz böyle bir asistanı kullanır mı?</legend>
+      <label><input type="radio" name="would_use" value="evet" required> Evet</label>
+      <label><input type="radio" name="would_use" value="belki"> Belki</label>
+      <label><input type="radio" name="would_use" value="hayir"> Hayır</label>
+    </fieldset>
+    <fieldset><legend id="fbCommentQ">Aylık ne ödemeyi beklersiniz, ya da eksik olan ne? (isteğe bağlı)</legend>
+      <textarea name="comment" maxlength="500" aria-labelledby="fbCommentQ"></textarea>
+    </fieldset>
+    <label class="check"><input type="checkbox" name="contact_ok"> Bizimle iletişime geçebilirsiniz</label>
+    <button type="submit" id="fbBtn">Gönder</button>
+  </form>
+  <div class="msg" id="fbMsg" role="status"></div>
+</section>
+
 <p class="disclaimer">
   Bu bir yapay zeka asistanı demosudur ve kurgusal verilerle çalışır.
   Lütfen <b>gerçek kişisel bilgilerinizi paylaşmayın</b> — yandaki kurgusal bilgileri kullanın.
@@ -285,13 +340,21 @@
   const ROOM_TOKEN = params.get("t");
   const REMOTE = Boolean(ROOM);
 
+  // A timed slot link (#133, emailed by the slot backend): ?slot=<token>&profil=<key>. The
+  // backend is the authority on whether the slot is open; the page asks it before every call
+  // and then starts the hosted agent exactly like the public path, bypassing status.json.
+  // The backend's address lives in slots.json ({"api": ""} = the feature is off).
+  const SLOT = params.get("slot");
+
   // Public self-serve demo: a bot deployed on Pipecat Cloud, started per visitor. The key
   // below is a *public* Pipecat Cloud key — it is designed to sit in client code and can
   // only start sessions for this one agent. The real spend controls are elsewhere and are
   // not optional: MAX_SESSION_SECS on the agent, and the spend limit on the account.
   // Empty key = feature off, and the page falls back to the guided-session message, so a
   // half-finished deploy never shows visitors a call button that hangs.
-  const PCC_AGENT = params.get("agent") ?? "umay-demo";
+  // ?env=dev points a rehearsal at the dev twin (umay-dev, ADR-0027); a visitor to the plain page
+  // always gets umay-demo. ?agent=NAME still wins for any other agent.
+  const PCC_AGENT = params.get("agent") ?? (params.get("env") === "dev" ? "umay-dev" : "umay-demo");
   const PCC_KEY = params.get("k") ?? "pk_0a8c82dd-1dec-4d8e-ba64-49de10b3ce42";
   const PUBLIC_DEMO = Boolean(PCC_KEY);
   const PCC_START = `https://api.pipecat.daily.co/v1/public/${PCC_AGENT}/start`;
@@ -568,6 +631,7 @@
     // A visitor with no invite, no bot address and no deployed public agent has nothing to
     // reach; say so at once rather than after a timeout.
     if (!OPERATOR && !REMOTE && !PUBLIC_DEMO) return guidedSessionOnly();
+    if (SLOT && !(await slotIsOpen())) return;
 
     // Ask for the microphone up front. The SDK asks anyway, but a denial surfaces there as
     // a minified fatal error deep inside the start call — which reads to the visitor as
@@ -745,6 +809,7 @@
   }
 
   function resetUI(message, isErr = false) {
+    const wasConnected = connected;
     connected = false;
     busy = false;
     client = null;
@@ -758,6 +823,7 @@
     setStatus(message, isErr);
     lastRole = null;
     lastBubble = null;
+    if (wasConnected && SLOT && !REMOTE && !OPERATOR) showFeedback();
   }
 
   // Availability is a founder-controlled flag, not a GPU pod's health: the public demo
@@ -803,7 +869,105 @@
   // link for its own trial window — it must not go dark because the founder toggled the
   // generic public page closed for the weekend. The server-side trial_open() check in
   // bot.py remains the real authority regardless of whether this button is offered.
-  if (PUBLIC_DEMO && !REMOTE && !OPERATOR && !isProspectProfile) gateOnAvailability();
+  if (PUBLIC_DEMO && !REMOTE && !OPERATOR && !isProspectProfile && !SLOT) gateOnAvailability();
+
+  // -- timed slots (#133) --------------------------------------------------
+  let slotApi = null;
+  async function loadSlotApi() {
+    if (slotApi !== null) return slotApi;
+    try {
+      const res = await fetch("slots.json", { cache: "no-store" });
+      slotApi = res.ok ? String((await res.json()).api || "").replace(/\/$/, "") : "";
+    } catch { slotApi = ""; }
+    return slotApi;
+  }
+  const clock = (sec) => new Date(sec * 1000).toLocaleTimeString("tr-TR",
+    { hour: "2-digit", minute: "2-digit", timeZone: "Europe/Istanbul" });
+
+  async function slotIsOpen() {
+    const api = await loadSlotApi();
+    let info = null;
+    try {
+      const res = await fetch(`${api}/slot/${encodeURIComponent(SLOT)}`, { cache: "no-store" });
+      info = res.ok ? await res.json() : null;
+    } catch { info = null; }
+    if (info && info.open) {
+      setStatus(`Oturumunuz ${clock(info.ends_at)} saatine kadar açık. Başlatmak için yeşil tuşa basın.`);
+      return true;
+    }
+    const why = { not_started: "Oturumunuz henüz başlamadı. Bağlantı e-postanıza oturum açılınca gelir.",
+      ended: "Bu oturumun süresi doldu. Yeni bir demo isteyebilirsiniz.",
+      unknown: "Bu bağlantı tanınmadı. E-postanızdaki bağlantıyı kullanın.",
+      unavailable: "Bu oturum açılamadı. Yeni bir demo isteyebilirsiniz." };
+    callBtn.disabled = true;
+    setStatus(why[info?.reason] ?? "Oturum durumu okunamadı. Lütfen birazdan tekrar deneyin.", true);
+    setTimeout(() => { callBtn.disabled = false; }, 4000);
+    return false;
+  }
+
+  if (SLOT && !REMOTE && !OPERATOR) slotIsOpen();
+
+  if (!SLOT && !REMOTE && !OPERATOR) {
+    loadSlotApi().then((api) => { if (api) document.getElementById("slotReq").hidden = false; });
+    const form = document.getElementById("slotForm");
+    const sectorEl = document.getElementById("slotSector");
+    sectorEl.innerHTML = Object.entries(PROFILES).map(([k, p]) =>
+      `<option value="${k}"${k === profileKey ? " selected" : ""}>${p.label}</option>`).join("");
+    const msg = document.getElementById("slotMsg");
+    form.addEventListener("submit", async (ev) => {
+      ev.preventDefault();
+      const btn = document.getElementById("slotBtn");
+      btn.disabled = true;
+      msg.className = "msg";
+      msg.textContent = "Gönderiliyor…";
+      try {
+        const res = await fetch(`${slotApi}/request`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email: document.getElementById("slotEmail").value, profil: document.getElementById("slotSector").value }),
+        });
+        const body = await res.json().catch(() => ({}));
+        msg.className = res.ok ? "msg" : "msg err";
+        msg.textContent = body.message || (res.ok ? "Talebiniz alındı." : "Şu anda talep alınamıyor. Lütfen sonra tekrar deneyin.");
+        if (res.ok) form.reset();
+      } catch {
+        msg.className = "msg err";
+        msg.textContent = "Bağlantı kurulamadı. Lütfen sonra tekrar deneyin.";
+      }
+      btn.disabled = false;
+    });
+  }
+
+  // -- post-call feedback (#151): slot mode only, three questions, stored on the slot ------
+  function showFeedback() {
+    const sec = document.getElementById("fbSec");
+    if (!sec.hidden) return;
+    loadSlotApi().then((api) => { if (api) { sec.hidden = false; sec.scrollIntoView({ block: "nearest" }); } });
+  }
+  document.getElementById("fbForm").addEventListener("submit", async (ev) => {
+    ev.preventDefault();
+    const f = ev.target, msg = document.getElementById("fbMsg"), btn = document.getElementById("fbBtn");
+    btn.disabled = true;
+    msg.className = "msg";
+    msg.textContent = "Gönderiliyor…";
+    try {
+      const res = await fetch(`${slotApi}/slot/${encodeURIComponent(SLOT)}/feedback`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          understood: Number(f.understood.value), would_use: f.would_use.value,
+          comment: f.comment.value, contact_ok: f.contact_ok.checked,
+        }),
+      });
+      const body = await res.json().catch(() => ({}));
+      msg.className = res.ok ? "msg" : "msg err";
+      msg.textContent = body.message || (res.ok ? "Teşekkürler." : "Gönderilemedi. Lütfen sonra tekrar deneyin.");
+    } catch {
+      msg.className = "msg err";
+      msg.textContent = "Bağlantı kurulamadı. Lütfen sonra tekrar deneyin.";
+    }
+    btn.disabled = false;
+  });
 
   callBtn.addEventListener("click", () => {
     if (busy) return;
