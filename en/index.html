@@ -151,7 +151,7 @@
     <div class="call-card" id="callCard" aria-label="Sample call transcript (Turkish, with English translations)">
       <div class="call-card-bar">
         <span class="call-dot" aria-hidden="true"></span>
-        <span>Incoming call · Umay Demo Auto Service</span>
+        <span class="call-title">Incoming call · Umay Demo Auto Service</span>
         <span class="call-chip">fictional data</span>
       </div>
       <div class="call-body">
@@ -329,12 +329,26 @@
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   var card = document.getElementById('callCard');
   if (!card) return;
-  card.classList.add('replay');
   var body = card.querySelector('.call-body');
   var items = Array.prototype.slice.call(card.querySelectorAll('.cb, .call-result'));
-  items.forEach(function (el) { el.classList.add('pending'); });
+  // The greeting (it says Umay is an AI) and the caller's first line are never hidden.
+  var SHOWN = 2;
+  var wide = window.matchMedia('(min-width: 901px)');
+  // Wide screens: the card grows with the transcript (CSS .replay-grow). Reserve its
+  // final height first so lines appearing never push the page around.
+  if (wide.matches) {
+    card.classList.add('replay-grow');
+    body.style.minHeight = body.scrollHeight + 'px';
+  }
+  // Hide the glosses only after measuring, so the reserved height includes them.
+  card.classList.add('replay');
+  items.slice(SHOWN).forEach(function (el) { el.classList.add('pending'); });
+  if (!items.length || items.length <= SHOWN) return;
+  items.slice(0, SHOWN).forEach(function (el) { el.classList.add('glossed'); });
 
-  function scrollBottom() { body.scrollTop = body.scrollHeight; }
+  // Phones keep a fixed-height panel and follow the newest line (the greeting is
+  // sticky); wide screens never scroll.
+  function scrollBottom() { if (!wide.matches) body.scrollTop = body.scrollHeight; }
 
   function typeBot(el, done) {
     var txt = el.querySelector('.txt');
@@ -392,9 +406,9 @@
     if (entries.some(function (e) { return e.isIntersecting; })) {
       started = true;
       io.disconnect();
-      setTimeout(function () { step(0); }, 400);
+      setTimeout(function () { step(SHOWN); }, 0);
     }
-  }, { threshold: 0.35 });
+  }, { threshold: 0.15 });
   io.observe(card);
 })();
 </script>

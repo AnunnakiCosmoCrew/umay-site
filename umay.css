@@ -108,7 +108,7 @@ a { color: inherit; text-decoration: none; }
 
 /* ---- hero ---- */
 .hero {
-  padding: 72px 0 64px;
+  padding-block: 72px 64px;
   display: grid;
   grid-template-columns: minmax(0, 1fr) 420px;
   gap: 48px;
@@ -142,6 +142,10 @@ a { color: inherit; text-decoration: none; }
   font-size: 10.5px; text-transform: uppercase; letter-spacing: .06em;
   border: 1px solid var(--panel-line); border-radius: 999px;
   padding: 3px 9px; color: var(--panel-muted);
+  white-space: nowrap; flex-shrink: 0;
+}
+.call-title {
+  min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 .call-body {
   display: flex; flex-direction: column; gap: 10px;
@@ -299,6 +303,12 @@ footer { padding: 40px 0 56px; border-top: 1px solid var(--line); margin-top: 24
   .hero { grid-template-columns: 1fr; gap: 36px; }
   .call-card { max-width: 480px; width: 100%; }
   .call-body { height: 340px; }
+  /* The greeting says Umay is an AI: keep it in view while the rest scrolls under it. */
+  .call-body > .cb:first-child { position: sticky; top: -16px; z-index: 1; flex-shrink: 0; box-shadow: 0 6px 8px -4px var(--panel-bg); }
+}
+@media (min-width: 901px) {
+  /* Wide screens: the card grows with the transcript instead of scrolling inside it. */
+  .call-card.replay-grow .call-body { height: auto; overflow-y: visible; }
 }
 
 @media (max-width: 800px) {
@@ -306,6 +316,6 @@ footer { padding: 40px 0 56px; border-top: 1px solid var(--line); margin-top: 24
   .demo-card { flex-direction: column; align-items: flex-start; padding: 34px 28px; }
   .nav-links { gap: 16px; }
   .nav-links .nav-plain { display: none; }
-  .hero { padding: 44px 0 48px; }
+  .hero { padding-block: 44px 48px; }
   section { padding: 48px 0; }
 }
