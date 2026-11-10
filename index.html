@@ -132,7 +132,7 @@
     <div class="call-card" id="callCard" aria-label="Örnek görüşme dökümü">
       <div class="call-card-bar">
         <span class="call-dot" aria-hidden="true"></span>
-        <span>Gelen çağrı · Umay Demo Oto Servis</span>
+        <span class="call-title">Gelen çağrı · Umay Demo Oto Servis</span>
         <span class="call-chip">kurgusal veri</span>
       </div>
       <div class="call-body">
@@ -289,6 +289,28 @@
       </div>
     </div>
   </section>
+
+  <section class="slotreq" id="slotReq" data-base="" hidden aria-labelledby="slotReqH">
+    <div class="wrap">
+      <h2 id="slotReqH">Demoyu kendi zamanınızda deneyin</h2>
+      <p>E-posta adresinizi yazın; yaklaşık 5 dakika içinde, başlangıç ve bitiş saati belli,
+        süreli bir demo bağlantısı gönderelim. Adresiniz yalnızca bu bağlantıyı göndermek için kullanılır.</p>
+      <form id="slotForm">
+        <input type="email" id="slotEmail" required autocomplete="email" placeholder="ad@sirket.com" aria-label="E-posta adresi">
+        <select id="slotSector" aria-label="Sektör (isteğe bağlı)">
+          <option value="">Sektör (isteğe bağlı)</option>
+          <option value="banka">Banka</option>
+          <option value="enerji">Enerji</option>
+          <option value="oto-servis">Otomotiv</option>
+          <option value="saglik">Sağlık</option>
+          <option value="egitim">Eğitim</option>
+          <option value="kamu">Kamu</option>
+        </select>
+        <button type="submit" id="slotBtn" class="btn btn-primary">Demo iste</button>
+      </form>
+      <div class="msg" id="slotMsg" role="status"></div>
+    </div>
+  </section>
 </main>
 
 <footer>
@@ -300,6 +322,7 @@
   </div>
 </footer>
 
+<script defer src="slotreq.js"></script>
 <script>
 // Hero call-card replay: progressive enhancement over the static transcript.
 // No JS or prefers-reduced-motion => the full transcript stays visible as-is.
@@ -309,9 +332,21 @@
   if (!card) return;
   var body = card.querySelector('.call-body');
   var items = Array.prototype.slice.call(card.querySelectorAll('.cb, .call-result'));
-  items.forEach(function (el) { el.classList.add('pending'); });
+  // The greeting (it says Umay is an AI) and the caller's first line are never hidden.
+  var SHOWN = 2;
+  var wide = window.matchMedia('(min-width: 901px)');
+  // Wide screens: the card grows with the transcript (CSS .replay-grow). Reserve its
+  // final height first so lines appearing never push the page around.
+  if (wide.matches) {
+    card.classList.add('replay-grow');
+    body.style.minHeight = body.scrollHeight + 'px';
+  }
+  items.slice(SHOWN).forEach(function (el) { el.classList.add('pending'); });
+  if (!items.length || items.length <= SHOWN) return;
 
-  function scrollBottom() { body.scrollTop = body.scrollHeight; }
+  // Phones keep a fixed-height panel and follow the newest line (the greeting is
+  // sticky); wide screens never scroll.
+  function scrollBottom() { if (!wide.matches) body.scrollTop = body.scrollHeight; }
 
   function typeBot(el, done) {
     var txt = el.querySelector('.txt');
@@ -366,9 +401,9 @@
     if (entries.some(function (e) { return e.isIntersecting; })) {
       started = true;
       io.disconnect();
-      setTimeout(function () { step(0); }, 400);
+      setTimeout(function () { step(SHOWN); }, 0);
     }
-  }, { threshold: 0.35 });
+  }, { threshold: 0.15 });
   io.observe(card);
 })();
 </script>

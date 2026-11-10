@@ -151,7 +151,7 @@
     <div class="call-card" id="callCard" aria-label="Sample call transcript (Turkish, with English translations)">
       <div class="call-card-bar">
         <span class="call-dot" aria-hidden="true"></span>
-        <span>Incoming call · Umay Demo Auto Service</span>
+        <span class="call-title">Incoming call · Umay Demo Auto Service</span>
         <span class="call-chip">fictional data</span>
       </div>
       <div class="call-body">
@@ -309,6 +309,28 @@
       </div>
     </div>
   </section>
+
+  <section class="slotreq" id="slotReq" data-base="../" hidden aria-labelledby="slotReqH">
+    <div class="wrap">
+      <h2 id="slotReqH">Try the demo in your own time</h2>
+      <p>Enter your e-mail address and within about 5 minutes we send you a timed demo link with
+        a fixed start and end. Your address is used only to send that link. The demo itself is in Turkish.</p>
+      <form id="slotForm">
+        <input type="email" id="slotEmail" required autocomplete="email" placeholder="name@company.com" aria-label="E-mail address">
+        <select id="slotSector" aria-label="Sector (optional)">
+          <option value="">Sector (optional)</option>
+          <option value="banka">Banking</option>
+          <option value="enerji">Energy</option>
+          <option value="oto-servis">Automotive</option>
+          <option value="saglik">Healthcare</option>
+          <option value="egitim">Education</option>
+          <option value="kamu">Public sector</option>
+        </select>
+        <button type="submit" id="slotBtn" class="btn btn-primary">Request a demo</button>
+      </form>
+      <div class="msg" id="slotMsg" role="status"></div>
+    </div>
+  </section>
 </main>
 
 <footer>
@@ -320,6 +342,7 @@
   </div>
 </footer>
 
+<script defer src="../slotreq.js"></script>
 <script>
 // Hero call-card replay: progressive enhancement over the static transcript.
 // No JS or prefers-reduced-motion => the full transcript (with glosses) stays as-is.
@@ -329,12 +352,26 @@
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   var card = document.getElementById('callCard');
   if (!card) return;
-  card.classList.add('replay');
   var body = card.querySelector('.call-body');
   var items = Array.prototype.slice.call(card.querySelectorAll('.cb, .call-result'));
-  items.forEach(function (el) { el.classList.add('pending'); });
+  // The greeting (it says Umay is an AI) and the caller's first line are never hidden.
+  var SHOWN = 2;
+  var wide = window.matchMedia('(min-width: 901px)');
+  // Wide screens: the card grows with the transcript (CSS .replay-grow). Reserve its
+  // final height first so lines appearing never push the page around.
+  if (wide.matches) {
+    card.classList.add('replay-grow');
+    body.style.minHeight = body.scrollHeight + 'px';
+  }
+  // Hide the glosses only after measuring, so the reserved height includes them.
+  card.classList.add('replay');
+  items.slice(SHOWN).forEach(function (el) { el.classList.add('pending'); });
+  if (!items.length || items.length <= SHOWN) return;
+  items.slice(0, SHOWN).forEach(function (el) { el.classList.add('glossed'); });
 
-  function scrollBottom() { body.scrollTop = body.scrollHeight; }
+  // Phones keep a fixed-height panel and follow the newest line (the greeting is
+  // sticky); wide screens never scroll.
+  function scrollBottom() { if (!wide.matches) body.scrollTop = body.scrollHeight; }
 
   function typeBot(el, done) {
     var txt = el.querySelector('.txt');
@@ -392,9 +429,9 @@
     if (entries.some(function (e) { return e.isIntersecting; })) {
       started = true;
       io.disconnect();
-      setTimeout(function () { step(0); }, 400);
+      setTimeout(function () { step(SHOWN); }, 0);
     }
-  }, { threshold: 0.35 });
+  }, { threshold: 0.15 });
   io.observe(card);
 })();
 </script>
