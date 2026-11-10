@@ -334,19 +334,11 @@
   var items = Array.prototype.slice.call(card.querySelectorAll('.cb, .call-result'));
   // The greeting (it says Umay is an AI) and the caller's first line are never hidden.
   var SHOWN = 2;
-  var wide = window.matchMedia('(min-width: 901px)');
-  // Wide screens: the card grows with the transcript (CSS .replay-grow). Reserve its
-  // final height first so lines appearing never push the page around.
-  if (wide.matches) {
-    card.classList.add('replay-grow');
-    body.style.minHeight = body.scrollHeight + 'px';
-  }
   items.slice(SHOWN).forEach(function (el) { el.classList.add('pending'); });
   if (!items.length || items.length <= SHOWN) return;
 
-  // Phones keep a fixed-height panel and follow the newest line (the greeting is
-  // sticky); wide screens never scroll.
-  function scrollBottom() { if (!wide.matches) body.scrollTop = body.scrollHeight; }
+  // Fixed-height panel at every width: follow the newest line (the greeting is sticky).
+  function scrollBottom() { body.scrollTop = body.scrollHeight; }
 
   function typeBot(el, done) {
     var txt = el.querySelector('.txt');
