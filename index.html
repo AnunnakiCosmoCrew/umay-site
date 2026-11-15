@@ -132,7 +132,7 @@
     <div class="call-card" id="callCard" aria-label="Örnek görüşme dökümü">
       <div class="call-card-bar">
         <span class="call-dot" aria-hidden="true"></span>
-        <span class="call-title">Gelen çağrı · Umay Demo Oto Servis</span>
+        <span class="call-title">Gelen çağrı · Umay Demo Oto Servis<span class="call-sub">Yanıtlayan: Umay · yapay zeka asistanı</span></span>
         <span class="call-chip">kurgusal veri</span>
       </div>
       <div class="call-body">
@@ -337,7 +337,7 @@
   items.slice(SHOWN).forEach(function (el) { el.classList.add('pending'); });
   if (!items.length || items.length <= SHOWN) return;
 
-  // Fixed-height panel at every width: follow the newest line (the greeting is sticky).
+  // Fixed-height panel at every width: follow the newest line (the AI disclosure sits in the bar).
   function scrollBottom() { body.scrollTop = body.scrollHeight; }
 
   function typeBot(el, done) {

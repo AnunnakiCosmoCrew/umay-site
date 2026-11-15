@@ -151,7 +151,7 @@
     <div class="call-card" id="callCard" aria-label="Sample call transcript (Turkish, with English translations)">
       <div class="call-card-bar">
         <span class="call-dot" aria-hidden="true"></span>
-        <span class="call-title">Incoming call · Umay Demo Auto Service</span>
+        <span class="call-title">Incoming call · Umay Demo Auto Service<span class="call-sub">Answered by Umay · AI assistant</span></span>
         <span class="call-chip">fictional data</span>
       </div>
       <div class="call-body">
@@ -361,7 +361,7 @@
   if (!items.length || items.length <= SHOWN) return;
   items.slice(0, SHOWN).forEach(function (el) { el.classList.add('glossed'); });
 
-  // Fixed-height panel at every width: follow the newest line (the greeting is sticky).
+  // Fixed-height panel at every width: follow the newest line (the AI disclosure sits in the bar).
   function scrollBottom() { body.scrollTop = body.scrollHeight; }
 
   function typeBot(el, done) {

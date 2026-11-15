@@ -710,7 +710,8 @@
                        cancelled: "Randevu iptal edildi" };
   const REC_LABELS = { code: "Randevu no", service: "Hizmet", date: "Gün", time: "Saat",
                        name: "Ad soyad", phone: "Telefon", plate: "Plaka", vehicle: "Araç",
-                       profile: "İşletme", occurred_at: "Gönderildi", previous: "Önceki saat" };
+                       profile: "İşletme", occurred_at: "Gönderildi", previous: "Önceki saat",
+                       answers: "Kayıt bilgileri" };
   const REC_MONO = new Set(["code", "plate", "phone", "date", "time", "occurred_at"]);
   function recValue(v) {
     if (v !== null && typeof v === "object") {
@@ -842,6 +843,25 @@
       pendingRecords.push([data.event, data.record]);
       setTimeout(flushRecords, 6000);
     });
+    // #367: the voice host was asleep when this call started. The server holds the greeting
+    // until the owned voice is warm (never a stand-in voice) and says so here; past its cap it
+    // ends the call unanswered and says that instead.
+    let voiceWarming = false, voiceUnavailable = false;
+    client.on(RTVIEvent.ServerMessage, (data) => {
+      if (!data) return;
+      if (data.type === "umay-voice-warming") {
+        voiceWarming = true;
+        const min = Math.max(1, Math.round((Number(data.eta_s) || 240) / 60));
+        setOrb("connecting");
+        setStatus(`Hat hazırlanıyor, yaklaşık ${min} dakika. Lütfen sayfadan ayrılmayın; Umay hazır olunca sizi selamlayacak.`);
+      } else if (data.type === "umay-voice-ready") {
+        voiceWarming = false;
+        setOrb("listening");
+        setStatus("Umay sizi dinliyor…");
+      } else if (data.type === "umay-voice-unavailable") {
+        voiceWarming = false; voiceUnavailable = true;
+      }
+    });
     client.on(RTVIEvent.BotOutput, (data) => {
       // Older server (no early event): fall back to the "completed" frame, the sentence
       // after the content filters and before the normaliser (#125, #131). "new" is the
@@ -853,7 +873,7 @@
     });
 
     client.on(RTVIEvent.UserStartedSpeaking, () => {
-      if (!connected) return;
+      if (!connected || voiceWarming) return;
       setOrb("listening");
       setStatus("Umay sizi dinliyor…");
     });
@@ -868,7 +888,9 @@
       setStatus("Umay sizi dinliyor…");
     });
 
-    client.on(RTVIEvent.Disconnected, () => resetUI("Görüşme sona erdi. Tekrar deneyebilirsiniz."));
+    client.on(RTVIEvent.Disconnected, () => resetUI(voiceUnavailable
+      ? "Ses hattı şu an hazır değil. Lütfen birkaç dakika sonra tekrar deneyin."
+      : "Görüşme sona erdi. Tekrar deneyebilirsiniz."));
     client.on(RTVIEvent.Error, () => {
       if (!connected && busy) connectFailed();
     });
