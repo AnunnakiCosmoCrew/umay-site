@@ -72,6 +72,13 @@ a { color: inherit; text-decoration: none; }
 
 .brand { display: inline-flex; align-items: center; gap: 10px; }
 .brand svg { display: block; }
+/* Umay icon "Two voices": Luvita's ink and moss (luvita-docs/brand/README.md), not the site palette */
+.brand .mark-ink { fill: #111413; }
+.brand .mark-accent { fill: #3C5A45; }
+@media (prefers-color-scheme: dark) {
+  .brand .mark-ink { fill: #ECEDE9; }
+  .brand .mark-accent { fill: #9CC0A6; }
+}
 .brand-name {
   font-family: var(--font-display);
   font-weight: 700; font-size: 24px; letter-spacing: -0.02em;
