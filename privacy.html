@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Gizlilik / Privacy — Umay</title>
+<meta name="description" content="Umay'ın sitesi, demo görüşmesi ve deneme kanalları için gizlilik bilgisi. Privacy information for Umay's site, demo call and trial channels.">
+<link rel="canonical" href="https://umayconnect.org/privacy.html">
+<link rel="stylesheet" href="fonts/fonts.css">
+<style>
+/* Umay privacy page. Ink and moss, the site's tokens (site/umay.css); square corners, no pills. */
+:root {
+  --bg: #FFFFFF; --well: #F3F5F3; --ink: #111413; --soft: #2B3230; --muted: #4D5552;
+  --rule: #CFD4D1; --moss: #3C5A45;
+  --font: "Bricolage Grotesque", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #101312; --well: #1F2522; --ink: #ECEDE9; --soft: #C9CEC9; --muted: #9BA39F;
+  --rule: #2A302D; --moss: #9CC0A6; color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #101312; --well: #1F2522; --ink: #ECEDE9; --soft: #C9CEC9; --muted: #9BA39F;
+  --rule: #2A302D; --moss: #9CC0A6; color-scheme: dark; }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font);
+  font-size: 17px; line-height: 1.6; -webkit-font-smoothing: antialiased;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.top, main, .foot { max-width: 68ch; margin: 0 auto; }
+.top { display: flex; justify-content: space-between; align-items: baseline; gap: 16px;
+  padding-block: 28px 8px; border-bottom: 1px solid var(--rule); }
+.brand { font-weight: 700; font-size: 22px; color: var(--moss); text-decoration: none; }
+.langs { display: flex; gap: 20px; font-size: 15px; }
+a { color: var(--ink); text-decoration-color: var(--moss); text-decoration-thickness: 2px; text-underline-offset: 4px; }
+a:hover { color: var(--moss); }
+a:focus-visible { outline: 2px solid var(--moss); outline-offset: 3px; }
+article { padding-block: 32px 40px; }
+article + article { border-top: 1px solid var(--rule); }
+h1 { font-size: 34px; line-height: 1.15; margin: 0 0 4px; text-wrap: balance; }
+h2 { font-size: 19px; margin: 28px 0 6px; color: var(--moss); text-wrap: balance; }
+p, ul { margin: 0; color: var(--soft); }
+ul { padding-left: 20px; display: grid; gap: 8px; }
+strong { color: var(--ink); }
+.meta { color: var(--muted); font-size: 15px; }
+.foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px;
+  border-top: 1px solid var(--rule); padding-block: 20px 40px; font-size: 14px; color: var(--muted); }
+.foot a { color: var(--muted); }
+</style>
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="https://umayconnect.org/">Umay</a>
+  <nav class="langs" aria-label="Dil / Language"><a href="#tr">Türkçe</a><a href="#en" lang="en">English</a></nav>
+</header>
+
+<main>
+<article id="tr" lang="tr">
+  <h1>Gizlilik</h1>
+  <p class="meta">Son güncelleme: 21 Kasım 2026</p>
+
+  <h2>Bu sayfa neyi kapsar</h2>
+  <p>umayconnect.org sitesini, sitedeki canlı demo görüşmesini ve Umay'ın deneme kanallarını (yazılı sohbet ve WhatsApp deneme numarası) kapsar. Umay bir Luvita ürünüdür; bu kanallarda toplanan bilgilerden Luvita sorumludur.</p>
+
+  <h2>Hangi bilgileri alıyoruz</h2>
+  <ul>
+    <li><strong>Site ziyareti.</strong> Cloudflare Web Analytics ile yalnızca sayfa görüntüleme sayıları. Çerez kullanılmaz, sizi tanıyan bir bilgi tutulmaz.</li>
+    <li><strong>Demo görüşmesi.</strong> Konuşmanız anında yazıya çevrilir ve yanıt üretmek için bir yapay zekâ modeline gönderilir. Ses kaydı tutulmaz. Demo kurgusal işletmelerle çalışır; lütfen gerçek kişisel bilgi vermeyin.</li>
+    <li><strong>WhatsApp ve yazılı sohbet (deneme).</strong> WhatsApp'ın bize ilettiği telefon numaranız, yazdığınız mesajlar ve sohbette verdiğiniz bilgiler (örneğin bir kayıt için ad ve telefon).</li>
+    <li><strong>E-posta.</strong> Bize yazarsanız mesajınız ve e-posta adresiniz.</li>
+  </ul>
+
+  <h2>Ne için kullanıyoruz</h2>
+  <p>Sorunuza yanıt vermek, istediğiniz kaydı oluşturmak, hizmeti çalışır tutmak ve hataları gidermek için. Bilgilerinizi satmayız ve reklam için kullanmayız. WhatsApp sohbetleri yapay zekâ modellerini eğitmek veya geliştirmek için kullanılmaz.</p>
+
+  <h2>Kimlerle paylaşılır</h2>
+  <p>Yalnızca hizmeti çalıştıran sağlayıcılarla, bu iş için: Microsoft Azure (barındırma ve yapay zekâ modeli), OpenAI (yapay zekâ modeli), Deepgram (konuşmayı yazıya çevirme), Daily (sesli görüşme altyapısı), Meta (WhatsApp), Google (demo takvimi), Cloudflare (site istatistikleri ve e-posta yönlendirme) ve GitHub (sitenin barındırılması). Bu sağlayıcıların bir kısmı Türkiye dışındadır.</p>
+
+  <h2>Ne kadar süre saklanır</h2>
+  <p>Bir WhatsApp sohbeti yalnızca açık olduğu sürece hafızada tutulur. Denemelerde yapılan kayıtlar deneme bitince silinir. Hata gidermek için tutulan teknik kayıtlar sınırlı bir süre saklanır. İsterseniz bilgileriniz daha önce silinir.</p>
+
+  <h2>Haklarınız ve iletişim</h2>
+  <p>Hakkınızdaki bilgileri görmek, düzeltmek ya da silinmesini istemek için <a href="mailto:contact@umayconnect.org">contact@umayconnect.org</a> adresine yazın.</p>
+</article>
+
+<article id="en" lang="en">
+  <h1>Privacy</h1>
+  <p class="meta">Last updated: 21 November 2026</p>
+
+  <h2>What this page covers</h2>
+  <p>The umayconnect.org website, the live demo call on it, and Umay's trial channels (typed chat and a WhatsApp test number). Umay is a Luvita product; Luvita is responsible for the information collected through these channels.</p>
+
+  <h2>What we receive</h2>
+  <ul>
+    <li><strong>Visiting the site.</strong> Page-view counts only, through Cloudflare Web Analytics. No cookies are set and nothing that identifies you is kept.</li>
+    <li><strong>The demo call.</strong> What you say is turned into text as you speak and sent to an AI model to produce a reply. No audio is recorded. The demo runs on made-up businesses; please do not give real personal details.</li>
+    <li><strong>WhatsApp and typed chat (trial).</strong> Your phone number as WhatsApp passes it to us, the messages you write, and what you give in the chat (for example a name and phone number for a sign-up).</li>
+    <li><strong>Email.</strong> Your message and address if you write to us.</li>
+  </ul>
+
+  <h2>What we use it for</h2>
+  <p>To answer you, to make the sign-up or booking you ask for, to keep the service running and to fix faults. We do not sell your information or use it for advertising. WhatsApp conversations are not used to train or improve AI models.</p>
+
+  <h2>Who it is shared with</h2>
+  <p>Only the providers that run the service, for that purpose: Microsoft Azure (hosting and the AI model), OpenAI (AI model), Deepgram (speech to text), Daily (voice call infrastructure), Meta (WhatsApp), Google (the demo calendar), Cloudflare (site statistics and email forwarding) and GitHub (hosting the site). Some of these providers are outside Türkiye.</p>
+
+  <h2>How long it is kept</h2>
+  <p>A WhatsApp conversation is held in memory only while it is open. Sign-ups made during trials are deleted when the trial ends. Technical logs kept for fixing faults are kept for a limited time. If you ask, your information is deleted sooner.</p>
+
+  <h2>Your rights and contact</h2>
+  <p>To see, correct or delete information about you, write to <a href="mailto:contact@umayconnect.org">contact@umayconnect.org</a>.</p>
+</article>
+</main>
+
+<footer class="foot">
+  <span>© 2026 Umay. Bir Luvita ürünü — <a href="https://luvita.tr/">Luvita Teknoloji Ltd. Şti.</a> · Bodrum, Muğla / Türkiye</span>
+  <span>contact@umayconnect.org</span>
+</footer>
+</body>
+</html>
