@@ -423,22 +423,23 @@
 
   // Public self-serve demo: a bot deployed on Pipecat Cloud, started per visitor. The key
   // below is a *public* Pipecat Cloud key — it is designed to sit in client code and can
-  // only start sessions (for the account's agents: umay-demo and the sector instances). The real spend controls are elsewhere and are
+  // only start sessions (for the account's agents: the sector instances and each business's own). The real spend controls are elsewhere and are
   // not optional: MAX_SESSION_SECS on the agent, and the spend limit on the account.
   // Empty key = feature off, and the page falls back to the guided-session message, so a
   // half-finished deploy never shows visitors a call button that hangs.
   // ?env=dev points a rehearsal at the dev twin (umay-dev, ADR-0027). ?agent=NAME still wins for
   // any other agent.
   // Umay#89 (ADR-0037 C): each sector on the plain page has its own instance, umay-demo-<sector>,
-  // one business each; the sector pill picks the instance, not a business inside one agent. A
-  // timed slot link (?slot=) and a prospect-trial key the page does not list stay on umay-demo
-  // until it is retired.
+  // one business each; the sector pill and a timed slot link (?slot=, always one of the six)
+  // pick the instance. A prospect link names its business's own instance with ?agent= (Umay#205).
+  // The old shared agent umay-demo is retired (Umay#206): a key with no instance, from an older
+  // link, gets the guided-session message instead of a call button.
   const SECTOR_INSTANCES = ["banka", "enerji", "oto-servis", "saglik", "egitim", "kamu"];
   const SECTOR = params.get("profil") || "banka";
   const PCC_AGENT = params.get("agent") ?? (params.get("env") === "dev" ? "umay-dev"
-    : (!SLOT && SECTOR_INSTANCES.includes(SECTOR)) ? `umay-demo-${SECTOR}` : "umay-demo");
+    : SECTOR_INSTANCES.includes(SECTOR) ? `umay-demo-${SECTOR}` : "");
   const PCC_KEY = params.get("k") ?? "pk_0a8c82dd-1dec-4d8e-ba64-49de10b3ce42";
-  const PUBLIC_DEMO = Boolean(PCC_KEY);
+  const PUBLIC_DEMO = Boolean(PCC_KEY && PCC_AGENT);
   const PCC_START = `https://api.pipecat.daily.co/v1/public/${PCC_AGENT}/start`;
 
   // Both remote paths ride Daily; only the way the room is obtained differs.
@@ -922,8 +923,7 @@
             "Content-Type": "application/json",
           },
           // The nested `body` lands on the agent as runner_args.body. A sector instance answers
-          // only as its own business and declines a key naming another; umay-demo still checks
-          // the key against its catalogue and declines one it does not know.
+          // only as its own business and declines a key naming another.
           body: JSON.stringify({ createDailyRoom: true, body: { profil: profileKey } }),
         });
         if (!res.ok) throw new Error(`start failed: ${res.status} ${await res.text()}`);
