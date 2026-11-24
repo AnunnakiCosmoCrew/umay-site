@@ -168,3 +168,8 @@ footer { border-top: 1px solid var(--rule); }
   .call-body { padding: 16px 14px 18px; }
   .cb { max-width: 92%; }
 }
+
+/* ---- more kinds of work: three short sample calls under the main one (#486) ---- */
+.calls { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; align-items: start; }
+.calls .call { flex: none; }
+.calls .cb { max-width: 94%; }
